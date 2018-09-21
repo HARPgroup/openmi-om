@@ -2,9 +2,9 @@
 
 #' The base object class for meta-model components.
 #'
-#' @param 
+#' @param
 #' @return reference class of type openmi.om.base.
-#' @seealso 
+#' @seealso
 #' @export
 #' @examples
 openmi.om.base <- setRefClass(
@@ -45,19 +45,19 @@ openmi.om.base <- setRefClass(
       # postStep() in OM php
     },
     validate = function(){
-      
+
     },
     logState = function () {
-      
+
     },
     getValue = function(name = "value"){
       # returns the value.  Defaults to simple case where object only has one possible value
       return(value)
     },
     addInput = function(
-      local_name = character(), 
-      object = openmi.om.base, 
-      remote_name = '', 
+      local_name = character(),
+      object = openmi.om.base,
+      remote_name = '',
       input_type = 'numeric'
     ){
       # adds inputs named as "localname"
@@ -77,10 +77,10 @@ openmi.om.base <- setRefClass(
         )
       )
     },
-    # added to base specification 
+    # added to base specification
     getInputs = function () {
       # get data from related objects or internal timeseries feeds
-      # store in internal "data" list 
+      # store in internal "data" list
       if (length(names(inputs)) > 0) {
         nms = names(inputs)
         for (i in 1:length(nms)) {
@@ -107,12 +107,12 @@ openmi.om.base <- setRefClass(
               data[i_name] <<- data[[i_name]] + i_value
             }
           }
-          
+
         }
       }
     },
     logState = function () {
-      
+
     },
     addComponent = function (thiscomp = openmi.om.base) {
       if (length(thiscomp$host) == 0) {
@@ -144,9 +144,9 @@ openmi.om.base <- setRefClass(
 )
 #' The base time-keeping class for simulation control.
 #'
-#' @param 
+#' @param
 #' @return reference class of type openmi.om.timer
-#' @seealso 
+#' @seealso
 #' @export
 #' @examples
 openmi.om.timer <- setRefClass(
@@ -168,9 +168,9 @@ openmi.om.timer <- setRefClass(
 
 #' The base class for meta-model simulation control.
 #'
-#' @param 
+#' @param
 #' @return reference class of type openmi.om.runtimeController
-#' @seealso 
+#' @seealso
 #' @export
 #' @examples
 openmi.om.runtimeController <- setRefClass(
@@ -184,9 +184,9 @@ openmi.om.runtimeController <- setRefClass(
 
 #' The base class for linkable meta-model components.
 #'
-#' @param 
+#' @param
 #' @return reference class of type openmi.om.linkableComponent
-#' @seealso 
+#' @seealso
 #' @export
 #' @examples
 openmi.om.linkableComponent <- setRefClass(
@@ -200,13 +200,13 @@ openmi.om.linkableComponent <- setRefClass(
 
 #' The base class for executable equation based meta-model components.
 #'
-#' @param 
+#' @param
 #' @return reference class of type openmi.om.equation
-#' @seealso 
+#' @seealso
 #' @export
 #' @examples
 openmi.om.equation <- setRefClass(
-  "om.equation",
+  "openmi.om.equation",
   fields = list(
     equation = "character",
     eq = "expression",
