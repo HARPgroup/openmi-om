@@ -1,5 +1,5 @@
 
-source("/usr/local/home/git/vahydro/om/R/package/classes.R") 
+source("/usr/local/home/git/openmi-om/R/package/classes.R") 
 # instantiate a version of om.equation
 m <- openmi.om.runtimeController();
 

@@ -1,5 +1,12 @@
-## OMI object model classes basic implementation
-## range of values; method $undo() undoes the last edit.
+## OpenMI Object-oriented Meta-model classes basic implementation
+
+#' The base object class for meta-model components.
+#'
+#' @param 
+#' @return reference class of type openmi.om.base.
+#' @seealso 
+#' @export
+#' @examples
 openmi.om.base <- setRefClass(
   "openmi.om.base",
   fields = list(
@@ -135,7 +142,13 @@ openmi.om.base <- setRefClass(
     }
   )
 )
-
+#' The base time-keeping class for simulation control.
+#'
+#' @param 
+#' @return reference class of type openmi.om.timer
+#' @seealso 
+#' @export
+#' @examples
 openmi.om.timer <- setRefClass(
   "openmi.om.timer",
   fields = list(
@@ -152,8 +165,14 @@ openmi.om.timer <- setRefClass(
     }
   )
 )
-# use: 
 
+#' The base class for meta-model simulation control.
+#'
+#' @param 
+#' @return reference class of type openmi.om.runtimeController
+#' @seealso 
+#' @export
+#' @examples
 openmi.om.runtimeController <- setRefClass(
   "openmi.om.runtimeController",
   fields = list(
@@ -163,6 +182,13 @@ openmi.om.runtimeController <- setRefClass(
   contains = "openmi.om.base"
 )
 
+#' The base class for linkable meta-model components.
+#'
+#' @param 
+#' @return reference class of type openmi.om.linkableComponent
+#' @seealso 
+#' @export
+#' @examples
 openmi.om.linkableComponent <- setRefClass(
   "openmi.om.linkableComponent",
   fields = list(
@@ -172,6 +198,13 @@ openmi.om.linkableComponent <- setRefClass(
   contains = "openmi.om.base"
 )
 
+#' The base class for executable equation based meta-model components.
+#'
+#' @param 
+#' @return reference class of type openmi.om.equation
+#' @seealso 
+#' @export
+#' @examples
 openmi.om.equation <- setRefClass(
   "om.equation",
   fields = list(
