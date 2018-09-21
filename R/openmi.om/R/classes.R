@@ -5,7 +5,7 @@
 #' @param
 #' @return reference class of type openmi.om.base.
 #' @seealso
-#' @export
+#' @export openmi.om.base
 #' @examples
 openmi.om.base <- setRefClass(
   "openmi.om.base",
@@ -147,7 +147,7 @@ openmi.om.base <- setRefClass(
 #' @param
 #' @return reference class of type openmi.om.timer
 #' @seealso
-#' @export
+#' @export openmi.om.timer
 #' @examples
 openmi.om.timer <- setRefClass(
   "openmi.om.timer",
@@ -171,7 +171,7 @@ openmi.om.timer <- setRefClass(
 #' @param
 #' @return reference class of type openmi.om.runtimeController
 #' @seealso
-#' @export
+#' @export openmi.om.runtimeController
 #' @examples
 openmi.om.runtimeController <- setRefClass(
   "openmi.om.runtimeController",
@@ -187,7 +187,7 @@ openmi.om.runtimeController <- setRefClass(
 #' @param
 #' @return reference class of type openmi.om.linkableComponent
 #' @seealso
-#' @export
+#' @export openmi.om.linkableComponent
 #' @examples
 openmi.om.linkableComponent <- setRefClass(
   "openmi.om.linkableComponent",
@@ -203,7 +203,7 @@ openmi.om.linkableComponent <- setRefClass(
 #' @param
 #' @return reference class of type openmi.om.equation
 #' @seealso
-#' @export
+#' @export openmi.om.equation
 #' @examples
 openmi.om.equation <- setRefClass(
   "openmi.om.equation",
