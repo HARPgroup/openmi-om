@@ -1,0 +1,8 @@
+*.private
+tempfile
+*.log
+*.Rhistory
+*.out
+*.docx
+.Rdata
+.Rhistory
