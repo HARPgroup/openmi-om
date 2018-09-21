@@ -1,11 +1,11 @@
 
 source("/usr/local/home/git/vahydro/om/R/package/classes.R") 
 # instantiate a version of om.equation
-m <- om.omi.runtimeController();
+m <- openmi.om.runtimeController();
 
-j <- om.omi.equation();
-k <- om.omi.equation();
-l <- om.omi.equation();
+j <- openmi.om.equation();
+k <- openmi.om.equation();
+l <- openmi.om.equation();
 k$defaultvalue = 0
 m$addComponent(k) 
 m$addComponent(l) 

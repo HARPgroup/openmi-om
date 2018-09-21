@@ -1,7 +1,7 @@
 ## OMI object model classes basic implementation
 ## range of values; method $undo() undoes the last edit.
-om.omi.base <- setRefClass(
-  "om.omi.base",
+openmi.om.base <- setRefClass(
+  "openmi.om.base",
   fields = list(
     name = "character",
     value = "numeric",
@@ -49,7 +49,7 @@ om.omi.base <- setRefClass(
     },
     addInput = function(
       local_name = character(), 
-      object = om.omi.base, 
+      object = openmi.om.base, 
       remote_name = '', 
       input_type = 'numeric'
     ){
@@ -107,7 +107,7 @@ om.omi.base <- setRefClass(
     logState = function () {
       
     },
-    addComponent = function (thiscomp = om.omi.base) {
+    addComponent = function (thiscomp = openmi.om.base) {
       if (length(thiscomp$host) == 0) {
         thiscomp$host = 'localhost'
       }
@@ -129,12 +129,15 @@ om.omi.base <- setRefClass(
       #   - if property name is null then just use getValue() without parameter
       #print(thiscomp$compid)
       components[thiscomp$compid] <<- list('object' = thiscomp)
+    },
+    orderOperations = function () {
+      # sets basic hierarchy of execution by re-ordering the components list
     }
   )
 )
 
-om.omi.timer <- setRefClass(
-  "om.omi.timer",
+openmi.om.timer <- setRefClass(
+  "openmi.om.timer",
   fields = list(
     starttime = "POSIXct",
     endtime = "POSIXct",
@@ -142,7 +145,7 @@ om.omi.timer <- setRefClass(
     tz = "integer",
     dt = "numeric" # time step increment in seconds
   ),
-  contains = "om.omi.base",
+  contains = "openmi.om.base",
   methods = list(
     update <- function () {
       thistime <- thistime + dt
@@ -151,32 +154,32 @@ om.omi.timer <- setRefClass(
 )
 # use: 
 
-om.omi.runtimeController <- setRefClass(
-  "om.omi.runtimeController",
+openmi.om.runtimeController <- setRefClass(
+  "openmi.om.runtimeController",
   fields = list(
-    timer = "om.omi.timer",
+    timer = "openmi.om.timer",
     code = "character"
   ),
-  contains = "om.omi.base"
+  contains = "openmi.om.base"
 )
 
-om.omi.linkableComponent <- setRefClass(
-  "om.omi.linkableComponent",
+openmi.om.linkableComponent <- setRefClass(
+  "openmi.om.linkableComponent",
   fields = list(
     value = "numeric",
     code = "character"
   ),
-  contains = "om.omi.base"
+  contains = "openmi.om.base"
 )
 
-om.omi.equation <- setRefClass(
+openmi.om.equation <- setRefClass(
   "om.equation",
   fields = list(
     equation = "character",
     eq = "expression",
     defaultvalue = "numeric"
   ),
-  contains = "om.omi.linkableComponent",
+  contains = "openmi.om.linkableComponent",
   methods = list(
     initialize = function() {
       callSuper()
