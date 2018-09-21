@@ -1,5 +1,4 @@
-
-source("/usr/local/home/git/openmi-om/R/package/classes.R") 
+library("openmi.om")
 # instantiate a version of om.equation
 m <- openmi.om.runtimeController();
 
