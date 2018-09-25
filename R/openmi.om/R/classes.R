@@ -11,6 +11,7 @@ openmi.om.base <- setRefClass(
   "openmi.om.base",
   fields = list(
     name = "character",
+    debug = "logical",
     value = "numeric",
     data = "list",
     inputs = "list",
@@ -22,6 +23,9 @@ openmi.om.base <- setRefClass(
   ),
   methods = list(
     initialize = function(){
+      if (length(debug) == 0) {
+        debug <<- FALSE
+      }
       # init() in OM php
       if (length(components) > 0) {
         for (i in 1:length(components)) {
@@ -31,18 +35,25 @@ openmi.om.base <- setRefClass(
     },
     prepare = function(){
       # preStep() in OM php
+      getInputs()
     },
     update = function(){
       # step() in OM php
-      getInputs()
+      prepare()
       if (length(components) > 0) {
         for (i in 1:length(components)) {
           components[[i]]$update()
         }
       }
+      finish()
     },
     finish = function(){
       # postStep() in OM php
+      if (length(components) > 0) {
+        for (i in 1:length(components)) {
+          components[[i]]$finish()
+        }
+      }
     },
     validate = function(){
 
@@ -87,7 +98,6 @@ openmi.om.base <- setRefClass(
           i_name = nms[i]
           for (j in 1:length(inputs[i_name])) {
             input = inputs[[i_name]][[j]]
-            print("obtained input")
             #print(input)
             i_object = input$object
             r_name = input$remote_name
@@ -102,8 +112,9 @@ openmi.om.base <- setRefClass(
                 # nullify on initial
                 data[i_name] <<- 0
               }
-              print(data[[i_name]])
-              print(i_value)
+              if (debug) {
+                print(paste("obtained input", i_name, i_value,sep='='))
+              }
               data[i_name] <<- data[[i_name]] + i_value
             }
           }
@@ -155,13 +166,28 @@ openmi.om.timer <- setRefClass(
     starttime = "POSIXct",
     endtime = "POSIXct",
     thistime = "POSIXct",
+    status = "character",
     tz = "integer",
     dt = "numeric" # time step increment in seconds
   ),
   contains = "openmi.om.base",
   methods = list(
-    update <- function () {
-      thistime <- thistime + dt
+    update = function() {
+      if (length(thistime) == 0) {
+        thistime <<- starttime
+        status <<- 'running'
+      }
+      thistime <<- thistime + dt
+      if (thistime > endtime) {
+        status <<- 'finished'
+      }
+    },
+    initialize = function() {
+      callSuper()
+      if (length(dt) == 0) {
+        dt <<- 86400
+      }
+      status <<- 'initialized'
     }
   )
 )
@@ -179,7 +205,46 @@ openmi.om.runtimeController <- setRefClass(
     timer = "openmi.om.timer",
     code = "character"
   ),
-  contains = "openmi.om.base"
+  contains = "openmi.om.base",
+  methods = list(
+    checkRunVars = function() {
+      if (!is.null(timer)) {
+        if (is.null(timer$starttime)) {
+          print("Timer$starttime required. Exiting.")
+          return(FALSE)
+        } else {
+          if (is.null(timer$endtime)) {
+            print("Timer$endtime required. Exiting.")
+            return(FALSE)
+          }
+        }
+      } else {
+        print("Timer object is not set. Exiting.")
+        return(FALSE)
+      }
+      return(TRUE)
+    },
+    run = function() {
+      runok = checkRunVars()
+      if (runok) {
+        while (timer$status != 'finished') {
+          print(paste("Model update() @", timer$thistime,sep=""))
+          update()
+        }
+        print("Run completed.")
+      } else {
+        print("Could not complete run.")
+      }
+    },
+    update = function() {
+      timer$update()
+      callSuper()
+    },
+    initialize = function() {
+      callSuper()
+      timer$initialize()
+    }
+  )
 )
 
 #' The base class for linkable meta-model components.
@@ -230,6 +295,10 @@ openmi.om.equation <- setRefClass(
       data$value <<- value
       preval = eval(eq, data)
       value <<- as.numeric(preval)
+      if (debug) {
+        print(paste("eq = ", equation, " value = ", value))
+      }
     }
   )
 )
+
