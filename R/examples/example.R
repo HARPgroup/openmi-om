@@ -1,3 +1,5 @@
+# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9100.tar.gz', repos = NULL, type="source")
+
 library("openmi.om")
 # instantiate a version of om.equation
 m <- openmi.om.runtimeController();
@@ -20,4 +22,5 @@ m$timer$starttime = as.POSIXct('2001-01-01')
 m$timer$endtime = as.POSIXct('2001-01-15')
 m$timer$thistime = m$timer$starttime
 m$initialize()
+j$debug <- TRUE
 m$run()
