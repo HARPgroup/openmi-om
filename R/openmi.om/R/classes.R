@@ -28,9 +28,9 @@ openmi.om.timer <- setRefClass(
         status <<- 'running'
       }
       thistime <<- thistime + seconds(dt)
-      mo <<- as.integer(format(timer$thistime,'%m'))
-      da <<- as.integer(format(timer$thistime,'%d'))
-      yr <<- as.integer(format(timer$thistime,'%Y'))
+      mo <<- as.integer(format(thistime,'%m'))
+      da <<- as.integer(format(thistime,'%d'))
+      yr <<- as.integer(format(thistime,'%Y'))
       if (thistime > endtime) {
         status <<- 'finished'
       }
@@ -39,9 +39,9 @@ openmi.om.timer <- setRefClass(
       if (length(dt) == 0) {
         dt <<- 86400
       }
-      mo <<- as.integer(format(timer$thistime,'%m'))
-      da <<- as.integer(format(timer$thistime,'%d'))
-      yr <<- as.integer(format(timer$thistime,'%Y'))
+      mo <<- as.integer(format(thistime,'%m'))
+      da <<- as.integer(format(thistime,'%d'))
+      yr <<- as.integer(format(thistime,'%Y'))
       status <<- 'initialized'
     }
   )
