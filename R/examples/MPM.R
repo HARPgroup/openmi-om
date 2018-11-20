@@ -1,15 +1,15 @@
 #Load in a stage storage table and input orifice height, diameter, and normal stage
-SS<-read.csv("C:/usr/local/home/git/vahydro/om/R/examples/SS.csv")
+SS<-read.csv("C:/usr/local/home/git/openmi-om/R/examples/SS.csv")
 diameter<-7.9
 height<-2
 NS<-4.6635
 
 #Load in inflow data (as well as other model data)
-fxn_locations = 'C:/usr/local/home/git/r-dh-ecohydro/Analysis'
+fxn_locations = 'C:/usr/local/home/git/hydro-tools/VAHydro-1.0'
 source(paste(fxn_locations,"fn_vahydro-1.0.R", sep = "/"))
-source(paste(fxn_locations,"fn_iha.R", sep = "/"))
-runid<-9997
-elid<-340136
+#source(paste(fxn_locations,"fn_iha.R", sep = "/"))
+runid<-7998
+elid<-339991
 dat<-fn_get_runfile(elid, runid)
 S<-dat$impoundment_Storage[1]#Input base storage
 

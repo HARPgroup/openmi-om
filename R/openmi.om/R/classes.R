@@ -1,4 +1,52 @@
 ## OpenMI Object-oriented Meta-model classes basic implementation
+library(lubridate)
+
+#' The base time-keeping class for simulation control.
+#'
+#' @param
+#' @return reference class of type openmi.om.timer
+#' @seealso
+#' @export openmi.om.timer
+#' @examples
+openmi.om.timer <- setRefClass(
+  "openmi.om.timer",
+  fields = list(
+    starttime = "POSIXct",
+    endtime = "POSIXct",
+    thistime = "POSIXct",
+    status = "character",
+    mo = "integer",
+    da = "integer",
+    yr = "integer",
+    tz = "integer",
+    dt = "numeric" # time step increment in seconds
+  ),
+  methods = list(
+    update = function() {
+      if (length(thistime) == 0) {
+        thistime <<- starttime
+        status <<- 'running'
+      }
+      thistime <<- thistime + seconds(dt)
+      mo <<- as.integer(format(k$timer$thistime,'%m'))
+      da <<- as.integer(format(k$timer$thistime,'%d'))
+      yr <<- as.integer(format(k$timer$thistime,'%Y'))
+      if (thistime > endtime) {
+        status <<- 'finished'
+      }
+    },
+    initialize = function() {
+      if (length(dt) == 0) {
+        dt <<- 86400
+      }
+      mo <<- as.integer(format(k$timer$thistime,'%m'))
+      da <<- as.integer(format(k$timer$thistime,'%d'))
+      yr <<- as.integer(format(k$timer$thistime,'%Y'))
+      status <<- 'initialized'
+    }
+  )
+)
+
 
 #' The base object class for meta-model components.
 #'
@@ -19,6 +67,7 @@ openmi.om.base <- setRefClass(
     host = 'character',
     type = 'character',
     compid = 'character',
+    timer = "openmi.om.timer",
     id = 'character'
   ),
   methods = list(
@@ -46,6 +95,7 @@ openmi.om.base <- setRefClass(
         }
       }
       finish()
+      logState()
     },
     finish = function(){
       # postStep() in OM php
@@ -59,6 +109,7 @@ openmi.om.base <- setRefClass(
 
     },
     logState = function () {
+      # logState() in OM php
 
     },
     getValue = function(name = "value"){
@@ -91,7 +142,12 @@ openmi.om.base <- setRefClass(
     # added to base specification
     getInputs = function () {
       # get data from related objects or internal timeseries feeds
+      # @todo: determine if we should clear data array at time begin
       # store in internal "data" list
+      data$mo <<- timer$mo
+      data$da <<- timer$da
+      data$yr <<- timer$yr
+      data$thistime <<- timer$thistime
       if (length(names(inputs)) > 0) {
         nms = names(inputs)
         for (i in 1:length(nms)) {
@@ -112,13 +168,13 @@ openmi.om.base <- setRefClass(
                 # nullify on initial
                 data[i_name] <<- 0
               }
+              data[i_name] <<- data[[i_name]] + as.numeric(i_value)
+              #data[i_name] <<- i_value
               if (debug) {
-                print(paste("obtained input", i_name, i_value,sep='='))
+                print(paste("obtained and converted input", i_name, i_value,sep='='))
               }
-              data[i_name] <<- data[[i_name]] + i_value
             }
           }
-
         }
       }
     },
@@ -146,6 +202,7 @@ openmi.om.base <- setRefClass(
       #   localname:host:type:id:[remote name]
       #   - if property name is null then just use getValue() without parameter
       #print(thiscomp$compid)
+      thiscomp$timer = timer
       components[thiscomp$compid] <<- list('object' = thiscomp)
     },
     orderOperations = function () {
@@ -153,44 +210,7 @@ openmi.om.base <- setRefClass(
     }
   )
 )
-#' The base time-keeping class for simulation control.
-#'
-#' @param
-#' @return reference class of type openmi.om.timer
-#' @seealso
-#' @export openmi.om.timer
-#' @examples
-openmi.om.timer <- setRefClass(
-  "openmi.om.timer",
-  fields = list(
-    starttime = "POSIXct",
-    endtime = "POSIXct",
-    thistime = "POSIXct",
-    status = "character",
-    tz = "integer",
-    dt = "numeric" # time step increment in seconds
-  ),
-  contains = "openmi.om.base",
-  methods = list(
-    update = function() {
-      if (length(thistime) == 0) {
-        thistime <<- starttime
-        status <<- 'running'
-      }
-      thistime <<- thistime + dt
-      if (thistime > endtime) {
-        status <<- 'finished'
-      }
-    },
-    initialize = function() {
-      callSuper()
-      if (length(dt) == 0) {
-        dt <<- 86400
-      }
-      status <<- 'initialized'
-    }
-  )
-)
+
 
 #' The base class for meta-model simulation control.
 #'
@@ -202,7 +222,6 @@ openmi.om.timer <- setRefClass(
 openmi.om.runtimeController <- setRefClass(
   "openmi.om.runtimeController",
   fields = list(
-    timer = "openmi.om.timer",
     code = "character"
   ),
   contains = "openmi.om.base",
@@ -237,12 +256,48 @@ openmi.om.runtimeController <- setRefClass(
       }
     },
     update = function() {
-      timer$update()
       callSuper()
+      # Update the timer afterwards
+      timer$update()
     },
     initialize = function() {
       callSuper()
       timer$initialize()
+    }
+  )
+)
+
+
+#****************************
+# Override logState() method and has write method on finish()
+#****************************
+# tracks date based stacks of information
+openmi.om.logger <- setRefClass(
+  "openmi.om.logger",
+  fields = list(
+    directory = "character",
+    path = "character",
+    filename = "character",
+    outputs = "ANY"
+  ),
+  contains = "openmi.om.linkableComponent",
+  # Define the logState method in the methods list
+  methods = list(
+    update = function () {
+      callSuper()
+    },
+    initialize = function () {
+      callSuper()
+    },
+    logState = function () {
+      callSuper()
+      if (!is.xts(outputs)) {
+        # first time, we need to initialize our data columns which includes timestamp
+        # @todo: be more parsimonius?
+        outputs <<- xts(data.frame(data), order.by = as.POSIXct(data$thistime))
+      } else {
+        outputs <<- rbind(outputs, xts(data.frame(data), order.by = as.POSIXct(data$thistime)))
+      }
     }
   )
 )
@@ -302,3 +357,45 @@ openmi.om.equation <- setRefClass(
   )
 )
 
+
+#' The base class for timeseries meta-model components.
+#'
+#' @param
+#' @return reference class of type openmi.om.timeSeriesInput
+#' @seealso
+#' @export openmi.om.timeSeriesInput
+#' @examples
+openmi.om.timeSeriesInput <- setRefClass(
+  "openmi.om.timeSeriesInput",
+  fields = list(
+    tsvalues = "ANY",
+    intmethod = "integer",
+    intflag = "integer"
+  ),
+  contains = "openmi.om.linkableComponent",
+  # Define the logState method in the methods list
+  methods = list(
+    getInputs = function () {
+      callSuper()
+      # requires that the use has populated the tsvalues variable with an xts timeseries
+      # get the current time slice
+      tvals = tsvalues[timer$thistime]
+      # @todo: handle non-exact time matches, either by preprocesing the tsvalues array
+      #        to always have matching dates, or by using the xct methods to grab date range
+      #        from thistime to (thistime - dt) and summarizing according to the method
+      for (colname in names(tsvalues)) {
+        data[colname] <<- tvals[,colname]
+      }
+    },
+    update = function () {
+      callSuper()
+    },
+    getValue = function(name = "value"){
+      # returns the value.  Defaults to simple case where object only has one possible value
+      if (name %in% names(data)) {
+        return(data[name])
+      }
+      return(FALSE);
+    }
+  )
+)
