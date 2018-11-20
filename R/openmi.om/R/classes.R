@@ -268,6 +268,23 @@ openmi.om.runtimeController <- setRefClass(
 )
 
 
+#' The base class for linkable meta-model components.
+#'
+#' @param
+#' @return reference class of type openmi.om.linkableComponent
+#' @seealso
+#' @export openmi.om.linkableComponent
+#' @examples
+openmi.om.linkableComponent <- setRefClass(
+  "openmi.om.linkableComponent",
+  fields = list(
+    value = "numeric",
+    code = "character"
+  ),
+  contains = "openmi.om.base"
+)
+
+
 #****************************
 # Override logState() method and has write method on finish()
 #****************************
@@ -302,21 +319,6 @@ openmi.om.logger <- setRefClass(
   )
 )
 
-#' The base class for linkable meta-model components.
-#'
-#' @param
-#' @return reference class of type openmi.om.linkableComponent
-#' @seealso
-#' @export openmi.om.linkableComponent
-#' @examples
-openmi.om.linkableComponent <- setRefClass(
-  "openmi.om.linkableComponent",
-  fields = list(
-    value = "numeric",
-    code = "character"
-  ),
-  contains = "openmi.om.base"
-)
 
 #' The base class for executable equation based meta-model components.
 #'
