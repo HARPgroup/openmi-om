@@ -399,3 +399,4 @@ openmi.om.timeSeriesInput <- setRefClass(
     }
   )
 )
+

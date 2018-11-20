@@ -44,7 +44,6 @@ m$addComponent(q)
 j <- openmi.om.equation();
 j$addInput('k', k, 'value', 'numeric')
 j$addInput('l', l, 'value', 'numeric')
-j$addInput('l', l, 'value', 'numeric')
 j$addInput('q', q, 'value', 'numeric')
 j$addInput('w', w, 'value', 'numeric')
 j$equation = "q - w"
