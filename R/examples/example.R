@@ -1,4 +1,4 @@
-# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9101.tar.gz', repos = NULL, type="source")
+# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9102.tar.gz', repos = NULL, type="source")
 
 library("openmi.om")
 # instantiate a version of om.equation
