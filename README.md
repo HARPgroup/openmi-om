@@ -9,6 +9,12 @@ install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_
 
 BUILDING
 ```
+# From R command prompt
+library('roxygen2')
+setwd('/usr/local/home/git/openmi-om/R/openmi.om')
+roxygenize()
+
 cd R
 R CMD build openmi.om
+
 ```
