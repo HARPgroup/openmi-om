@@ -1,8 +1,12 @@
-# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9101.tar.gz', repos = NULL, type="source")
+# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9104.tar.gz', repos = NULL, type="source")
 
 library("openmi.om")
 library("xts")
 library("IHA")
+library("lubridate")
+
+hydro_tools <- 'C:\\Users\\nrf46657\\Desktop\\VAHydro Development\\GitHub\\hydro-tools\\'#location of hydro-tools repo
+source(paste(hydro_tools,"VAHydro-2.0","rest_functions.R", sep = "\\")) #load REST functions
 
 
 #****************************
@@ -63,6 +67,8 @@ m$timer$dt <- 86400
 #****************************
 # now create an instance of the verboseEquation class we've just made
 k <- openmi.om.timeSeriesInput();
+
+
 # Create dat by reading tmp_file
 #tmp_file <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1127/datasets/tmp_file.csv"
 tmp_file = "http://deq2.bse.vt.edu/files/icprb/potomac_111518_precip_in.tsv"
@@ -101,7 +107,7 @@ pobs_nova$equation = paste(
 m$addComponent(pobs_nova) 
 
 pnml_matrix_nova <- openmi.om.matrix()
-pnml_matrix_nova$datamatrix <- as.matrix(vahydro_prop_matrix(256846, 'precip_nml_annual'));
+pnml_matrix_nova$datamatrix <- as.matrix(vahydro_prop_matrix(256846, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'))
 pnml_matrix_nova$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_nova$addInput('rowindex', mo, 'value') 
@@ -169,7 +175,7 @@ pobs_shen$equation = paste(
 m$addComponent(pobs_shen) 
 
 pnml_matrix_shen <- openmi.om.matrix()
-pnml_matrix_shen$datamatrix <- as.matrix(vahydro_prop_matrix(256848, 'precip_nml_annual'));
+pnml_matrix_shen$datamatrix <- as.matrix(vahydro_prop_matrix(256848, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'))
 pnml_matrix_shen$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_shen$addInput('rowindex', mo, 'value') 
@@ -240,12 +246,12 @@ logger$addInput('precip_nml_shen', pnml_matrix_shen, 'value')
 logger$addInput('precip_obs_shen', k, 'Shenandoah') 
 logger$addInput('ppct_shen', ppct_shen, 'value') 
 logger$addInput('pstatus_shen', pstatus_shen, 'value') 
-logger$directory = "C:/WorkSpace/modeling/projects/potomac/icprb-drought-2018"
+#logger$directory = "C:/WorkSpace/modeling/projects/potomac/icprb-drought-2018"
+logger$directory = getwd()
 logger$filename = "vahydro-precip-drought_v01.tsv"
 logger$path = paste(logger$directory, logger$filename, sep="/" )
 
 m$addComponent(logger) 
-
 #****************************
 # Call initialize for model and all children
 #****************************
