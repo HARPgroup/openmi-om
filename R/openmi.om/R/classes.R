@@ -27,7 +27,7 @@ openmi.om.timer <- setRefClass(
         thistime <<- starttime
         status <<- 'running'
       }
-      thistime <<- thistime + seconds(dt)
+      thistime <<- thistime + duration(dt, "seconds")
       mo <<- as.integer(format(thistime,'%m'))
       da <<- as.integer(format(thistime,'%d'))
       yr <<- as.integer(format(thistime,'%Y'))
@@ -288,7 +288,13 @@ openmi.om.linkableComponent <- setRefClass(
 #****************************
 # Override logState() method and has write method on finish()
 #****************************
-# tracks date based stacks of information
+#' The base class for logging component data.
+#'
+#' @param
+#' @return reference class of type openmi.om.linkableComponent
+#' @seealso
+#' @export openmi.om.logger
+#' @examples
 openmi.om.logger <- setRefClass(
   "openmi.om.logger",
   fields = list(
