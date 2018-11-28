@@ -1,6 +1,6 @@
 Package: openmi.om
 Title: Implementation of the OpenMI Concepts for Building Object-oriented Meta-models.
-Version: 0.0.0.9104
+Version: 0.0.0.9105
 Authors@R: person("Robert", "Burgholzer", email = "rburghol@vt.edu", role = c("aut", "cre"))
 Description: Provides set of reference classes and functions to assemble a component based simulation for constructing time-based model simulations.
 Depends: R (>= 3.4.3)
