@@ -27,7 +27,8 @@ openmi.om.timer <- setRefClass(
         thistime <<- starttime
         status <<- 'running'
       }
-      thistime <<- thistime + duration(dt, "seconds")
+      #thistime <<- thistime + duration(dt, "seconds")
+      thistime <<- thistime + seconds(dt)
       mo <<- as.integer(format(thistime,'%m'))
       da <<- as.integer(format(thistime,'%d'))
       yr <<- as.integer(format(thistime,'%Y'))
