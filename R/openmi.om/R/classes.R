@@ -381,6 +381,8 @@ openmi.om.timeSeriesInput <- setRefClass(
       callSuper()
       # requires that the use has populated the tsvalues variable with an xts timeseries
       # get the current time slice
+      # may use span i.e. tvals = tsvalues[paste(timer$lasttime, timer$thistime, sep=":")]
+      # must then apply function if it results in multiple values
       tvals = tsvalues[timer$thistime]
       # @todo: handle non-exact time matches, either by preprocesing the tsvalues array
       #        to always have matching dates, or by using the xct methods to grab date range
