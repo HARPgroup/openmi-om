@@ -411,3 +411,50 @@ openmi.om.timeSeriesInput <- setRefClass(
   )
 )
 
+
+#' The base class for matrix/lokup table meta-model components.
+#'
+#' @param
+#' @return reference class of type openmi.om.matrix
+#' @seealso
+#' @export openmi.om.matrix
+#' @examples
+openmi.om.matrix <- setRefClass(
+  "openmi.om.matrix",
+  fields = list(
+    datamatrix = "matrix",
+    intmethod = "integer",
+    intflag = "integer",
+    colindex = "ANY",
+    rowindex = "ANY"
+  ),
+  contains = "openmi.om.linkableComponent",
+  # Define the logState method in the methods list
+  methods = list(
+    update = function () {
+      callSuper()
+      # @todo: currently only returns exact match row/col lookup
+      #   - add types: 1-d (row only)
+      #   - add interpolation methods: interpolate, stair-step (prev value)
+
+      # match row & col exactly
+      value <<- datamatrix[data$rowindex,][data$colindex]
+    },
+    initialize = function () {
+      callSuper()
+      # @todo: enable complex matching types: stair-step, interpolate
+      # Case: Exact Match
+      if (length(rowindex) == 0) {
+        rowindex <<- 1
+      }
+      if (length(colindex) == 0) {
+        colindex <<- 1
+      }
+      data['rowindex'] <<- rowindex
+      data['colindex'] <<- colindex
+      if (length(datamatrix) == 0) {
+        datamatrix <<- matrix(nrow=1,ncol=1)
+      }
+    }
+  )
+)
