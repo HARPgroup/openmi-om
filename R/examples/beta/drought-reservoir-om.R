@@ -65,7 +65,14 @@ pobs_nova$equation = paste(
 m$addComponent(pobs_nova) 
 
 pnml_matrix_nova <- openmi.om.matrix()
-pnml_matrix_nova$datamatrix <- as.matrix(vahydro_prop_matrix(256846, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'));
+pnml_matrix_nova$datamatrix <- as.matrix(
+  vahydro_prop_matrix(
+    256846, 
+    entity_type = 'dh_feature', 
+    varkey = 'precip_nml_annual', 
+    datasite = 'http://deq1.bse.vt.edu/d.dh'
+  )
+);
 pnml_matrix_nova$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_nova$addInput('rowindex', mo, 'value') 
@@ -133,7 +140,14 @@ pobs_shen$equation = paste(
 m$addComponent(pobs_shen) 
 
 pnml_matrix_shen <- openmi.om.matrix()
-pnml_matrix_shen$datamatrix <- as.matrix(vahydro_prop_matrix(256848, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'));
+pnml_matrix_shen$datamatrix <- as.matrix(
+  vahydro_prop_matrix(
+    256848, 
+    entity_type = 'dh_feature', 
+    varkey = 'precip_nml_annual', 
+    datasite = 'http://deq1.bse.vt.edu/d.dh'
+  )
+);
 pnml_matrix_shen$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_shen$addInput('rowindex', mo, 'value') 
