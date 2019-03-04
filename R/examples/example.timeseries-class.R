@@ -1,8 +1,9 @@
-# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9101.tar.gz', repos = NULL, type="source")
+# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9105.tar.gz', repos = NULL, type="source")
 
 library("openmi.om")
 library("xts")
-
+library("IHA")
+library("lubridate")
 
 #****************************
 # Override logState() method
@@ -66,11 +67,12 @@ j$equation = paste(
   "drange = paste(wyb,'-10-01','/',as.character(timer$thistime),sep='')",
   "tsvals <- k$tsvalues[drange]",
   "print(data['testslot'])",
+  "print(value)",
   "sum(as.numeric(tsvals$Northern))",
   sep=";"
 )
 
-vahydro_prop_matrix
+#vahydro_prop_matrix
 
 m$addComponent(j) 
 
