@@ -149,7 +149,8 @@ pnml_matrix_shen$datamatrix <- as.matrix(
   )
 );
 pnml_matrix_shen$colindex = 'nml_daily'
-# could maybe just refer to the internal "mo"?  But this works too which is cool.
+# could maybe just refer to the internal "mo"?  
+#   - But this works too which is cool.
 pnml_matrix_shen$addInput('rowindex', mo, 'value') 
 pnml_matrix_shen$debug = TRUE
 m$addComponent(pnml_matrix_shen) 
