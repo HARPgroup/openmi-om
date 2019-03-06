@@ -435,6 +435,17 @@ openmi.om.matrix <- setRefClass(
   methods = list(
     update = function () {
       callSuper()
+      value <<- searchMatrix(
+        data$rowindex, data$colindex,
+        dataMatrix, rowtype, coltype
+      )
+      if (debug) {
+        print(paste("Found", data$rowindex, data$colindex, value, sep= ' '))
+      }
+
+    },
+
+    searchMatrix(rowix, colix, dm = dataMatrix, rt = rowtype, ct = coltype) {
       # @todo: currently only returns exact match row/col lookup
       #   - add types: 1-d (row only)
       #   - add interpolation methods: interpolate, stair-step (prev value)
@@ -446,12 +457,9 @@ openmi.om.matrix <- setRefClass(
       #   this does not yet function.  It should first find:
       #   - a full row match (or interpolation of multiple rows if app)
       #   - then derive a value from the retrieved row
-      value <<- findMatch(rowmatch, data$colindex, coltype)
-      if (debug) {
-        print(paste("Found", data$rowindex, data$colindex, value, sep= ' '))
-      }
-
-    },
+      match = findMatch(rowmatch, data$colindex, coltype)
+      return(match)
+    }
 
     findMatch = function (dm, ixval, ixtype = 0) {
       foundmatch = switch(
