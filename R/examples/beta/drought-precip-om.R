@@ -5,47 +5,8 @@ library("xts")
 library("IHA")
 library("lubridate")
 
-hydro_tools <- 'C:\\Users\\nrf46657\\Desktop\\VAHydro Development\\GitHub\\hydro-tools\\'#location of hydro-tools repo
+hydro_tools <- 'C:\\usr\\local\\home\\git\\hydro-tools\\'#location of hydro-tools repo
 source(paste(hydro_tools,"VAHydro-2.0","rest_functions.R", sep = "\\")) #load REST functions
-
-
-#****************************
-# Create basic Matrix component
-#****************************
-# tracks date based stacks of information
-openmi.om.matrix <- setRefClass(
-  "openmi.om.matrix",
-  fields = list(
-    datamatrix = "matrix",
-    intmethod = "integer",
-    intflag = "integer",
-    colindex = "ANY",
-    rowindex = "ANY"
-  ),
-  contains = "openmi.om.linkableComponent",
-  # Define the logState method in the methods list
-  methods = list(
-    update = function () {
-      callSuper()
-      # returns just the monthy
-      value <<- datamatrix[data$rowindex,][data$colindex]
-    },
-    initialize = function () {
-      callSuper()
-      if (length(rowindex) == 0) {
-        rowindex <<- 1
-      } 
-      if (length(colindex) == 0) {
-        colindex <<- 1
-      }
-      data['rowindex'] <<- rowindex
-      data['colindex'] <<- colindex
-      if (length(datamatrix) == 0) {
-        datamatrix <<- matrix(nrow=1,ncol=1)
-      }
-    }
-  )
-)
 
 
 #****************************
