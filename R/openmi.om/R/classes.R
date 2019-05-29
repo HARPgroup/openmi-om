@@ -441,14 +441,28 @@ openmi.om.matrix <- setRefClass(
       # stairstep
       # Note: when using switch, the matching arg must be a string
       #       it seems that R auto converts these to make correct matches
-      rowmatch <- findMatch(datamatrix, data$rowindex, rowtype)
+      valmatrix <- datamatrix
+      # @todo: evaluate all the cells in valmatrix, for now it assumes
+      #        that these are all numeric
+      rowmatch <- findMatch(valmatrix, data$rowindex, rowtype)
       # @todo:
       #   this does not yet function.  It should first find:
       #   - a full row match (or interpolation of multiple rows if app)
       #   - then derive a value from the retrieved row
-      value <<- findMatch(rowmatch, data$colindex, coltype)
+      mval <<- findMatch(rowmatch, data$colindex, coltype)
+      value <<- as.numeric(mval)
+      code <<- as.character(mval)
       if (debug) {
-        print(paste("Found", data$rowindex, data$colindex, value, sep= ' '))
+        print(paste(
+          "Found",
+          data$rowindex,
+          data$colindex,
+          'vaue:',
+          value,
+          'code',
+          code,
+          sep = ' '
+        ))
       }
 
     },

@@ -4,9 +4,11 @@ library("openmi.om")
 library("xts")
 library("IHA")
 library("lubridate")
+library("jsonlite")
 
 hydro_tools <- 'C:\\usr\\local\\home\\git\\hydro-tools\\'#location of hydro-tools repo
 source(paste(hydro_tools,"VAHydro-2.0","rest_functions.R", sep = "\\")) #load REST functions
+token <- rest_token(site, token, rest_uname, rest_pw);
 
 
 #****************************
@@ -58,6 +60,7 @@ m$addComponent(mo)
 # BEGIN - Northern VA REgion
 #######################################################
 pobs_nova <- openmi.om.equation();
+pobs_nova$name = 'Precip Obs NOVA'
 pobs_nova$addInput('wyb', wyb, 'value') 
 pobs_nova$equation = paste(
   "drange = paste(wyb,'-10-01','/',as.character(thistime),sep='')",
@@ -68,7 +71,26 @@ pobs_nova$equation = paste(
 m$addComponent(pobs_nova) 
 
 pnml_matrix_nova <- openmi.om.matrix()
-pnml_matrix_nova$datamatrix <- as.matrix(vahydro_prop_matrix(256846, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'))
+pnml_matrix_nova$name = 'Precip Nml NOVA'
+pnmp <- getProperty(
+  list(
+    varkey = 'precip_nml_annual',
+    entity_type = 'dh_feature',
+    bundle = 'om_data_matrix',
+    featureid = 256846
+  ),
+  base_url,
+  prop
+)
+pnm <- unserializeJSON(pnmp$field_dh_matrix)
+names(pnm) <- as.character(unlist(pnm[1,]))
+pnm <- pnm[-1,]
+rownames(pnm) <- NULL
+#for (z in 1:length(pnm)) {
+#  pnm[,z] <-as.numeric(as.character(pnm[,z]))
+#}
+pnml_matrix_nova$datamatrix <- as.matrix(pnm)
+
 pnml_matrix_nova$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_nova$addInput('rowindex', mo, 'value') 
@@ -76,6 +98,7 @@ pnml_matrix_nova$debug = TRUE
 m$addComponent(pnml_matrix_nova) 
 
 pnml_nova <- openmi.om.equation();
+pnml_nova$name = "WY to Date Precip NOVA" 
 pnml_nova$addInput('nml_daily', pnml_matrix_nova, 'value') 
 pnml_nova$addInput('wyb', wyb, 'value') 
 pnml_nova$equation = paste(
@@ -136,7 +159,23 @@ pobs_shen$equation = paste(
 m$addComponent(pobs_shen) 
 
 pnml_matrix_shen <- openmi.om.matrix()
-pnml_matrix_shen$datamatrix <- as.matrix(vahydro_prop_matrix(256848, 'precip_nml_annual', datasite = 'http://deq1.bse.vt.edu/d.dh'))
+pnmp <- getProperty(
+  list(
+    varkey = 'precip_nml_annual',
+    entity_type = 'dh_feature',
+    featureid = 256848
+  ),
+  base_url,
+  prop
+)
+pnm <- unserializeJSON(pnmp$field_dh_matrix)
+names(pnm) <- as.character(unlist(pnm[1,]))
+pnm <- pnm[-1,]
+rownames(pnm) <- NULL
+#for (z in 1:length(pnm)) {
+#  pnm[,z] <-as.numeric(as.character(pnm[,z]))
+#}
+pnml_matrix_shen$datamatrix <- as.matrix(pnm)
 pnml_matrix_shen$colindex = 'nml_daily'
 # could maybe just refer to the internal "mo"?  But this works too which is cool.
 pnml_matrix_shen$addInput('rowindex', mo, 'value') 
