@@ -35,7 +35,7 @@ openmi.om.matrix <- setRefClass(
       #   this does not yet function.  It should first find:
       #   - a full row match (or interpolation of multiple rows if app)
       #   - then derive a value from the retrieved row
-      mval <<- findMatch(rowmatch, data$colindex, coltype)
+      mval <- findMatch(rowmatch, data$colindex, coltype)
       value <<- as.numeric(mval)
       code <<- as.character(mval)
       if (debug) {
