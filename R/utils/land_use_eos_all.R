@@ -25,7 +25,7 @@ for (i in 1:length(dsn.list)) {
   }
 }
 
-# COMBINING DATA FROM EACH TYPE OF FLOW INTO A SINGLE DATA FRAME BY LAND USE ----------
+# COMBINING DATA FROM EACH TYPE OF FLOW INTO A SINGLE DATA FRAME ----------
 overall.data.namer <- paste(mod.scenario,land.segment,"eos_all", sep = "_")
 counter <- 1
 for (i in 1:length(land.use.list)) {
