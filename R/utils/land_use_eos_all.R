@@ -19,7 +19,7 @@ for (i in 1:length(dsn.list)) {
     input.data.namer <- paste0(land.segment,land.use.list[j],dsn.list[i])
     print(paste("Downloading", counter, "of", total.files))
     counter <- counter+1
-    temp.data.input <- try(read.csv(paste0("http://deq2.bse.vt.edu/p532c-sova/wdm/land/",land.use.list[j],"/p532cal_062211/",land.use.list[j],land.segment,"_",dsn.list[i],".csv")))
+    temp.data.input <- try(read.csv(paste0("http://deq2.bse.vt.edu/p532c-sova/wdm/land/",land.use.list[j],"/",mod.scenario,"/",land.use.list[j],land.segment,"_",dsn.list[i],".csv")))
     colnames(temp.data.input) <- c('Year', 'Month', 'Day', 'Hour', dsn.list[i])
     assign(input.data.namer,temp.data.input)
   }
