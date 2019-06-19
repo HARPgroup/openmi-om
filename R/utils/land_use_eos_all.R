@@ -10,15 +10,15 @@ library(lubridate)
 library(rstudioapi)
 
 # Setting working directory to the source file location
-current_path <- rstudioapi::getActiveDocumentContext()$path 
-setwd(dirname(current_path))
+# current_path <- rstudioapi::getActiveDocumentContext()$path 
+# setwd(dirname(current_path))
 
 # Setting up output location
-split.location <- strsplit(current_path, split = '/')
-split.location <- as.vector(split.location[[1]])
-basepath.stop <- as.numeric(which(split.location == 'GitHub'))
-basepath <- paste0(split.location[1:basepath.stop], collapse = "/")
-output.location <- file.path(basepath,"openmi-om","R","utils")
+# split.location <- strsplit(current_path, split = '/')
+# split.location <- as.vector(split.location[[1]])
+# basepath.stop <- as.numeric(which(split.location == 'GitHub'))
+# basepath <- paste0(split.location[1:basepath.stop], collapse = "/")
+output.location <- '/opt/model/p6/p6_gb604/out'
 
 # INPUTS ----------
 land.segment <- "A51121"
