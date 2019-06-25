@@ -1,8 +1,18 @@
+#' Land Use Unit Flow at Edge of Stream for All Uses Compiler Function 
+#' @description Compiles .csv files for all land uses unit flows into one .csv 
+#' @param land.segment a string containing the name of a CBP land segment
+#' @param wdmpath a string giving the filepath to within the model phase directory
+#' @param mod.scenario a string of the model scenario -- ex. "p532cal_062211"
+#' @param outpath the location where the output .csv file should be created
+#' @return The location of the exported .csv land use unit flow file 
+#' @import lubridate
+#' @export land.use.eos.all
+
 # DOCUMENTATION ----------
 # Daniel Hildebrand
 # 6-11-19
 # This script generates a single .csv file named "[cbp_scenario][landsegment]_eos_all" containing columns for 
-# [luname_111], [luname_211], [luname_411] for all land uses.
+# [luname_suro], [luname_ifwo], [luname_agwo] for all land uses.
 
 # LOADING LIBRARIES ----------
 library(lubridate)
@@ -49,4 +59,5 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
   assign(overall.data.namer,overall.data.builder)
   saved.file <- paste0(outpath, "/", overall.data.namer, ".csv")
   write.csv(overall.data.builder, saved.file, row.names = FALSE)
+  return(saved.file)
 }
