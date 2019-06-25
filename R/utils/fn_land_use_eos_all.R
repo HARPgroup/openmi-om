@@ -9,7 +9,7 @@ library(lubridate)
 
 land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
   # INPUTS ----------
-  land.use.list <- c('afo','alf','ccn','cex','cfo','cid','cpd','for','hom','hvf','hwm','hyo','hyw','lwm','nal','nex','nhi','nho','nhy','nid','nlo','npa','npd','pas','rcn','rex','rid','rpd','trp','urs')
+  land.use.list <- list.dirs(paste0(wdmpath, "/tmp/wdm/land"), full.name = FALSE, recursive = FALSE)
   dsn.list <- data.frame(dsn = c('0111', '0211', '0411'), dsn.label = c('suro', 'ifwo', 'agwo'))
   
   # READING IN LAND USE DATA FROM MODEL ----------
