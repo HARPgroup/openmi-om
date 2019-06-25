@@ -21,9 +21,10 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
       print(paste("Downloading", counter, "of", total.files))
       counter <- counter+1
       temp.data.input <- try(read.csv(paste0(wdmpath, "/tmp/wdm/land/",land.use.list[j],"/",mod.scenario,"/",land.use.list[j],land.segment,"_",dsn.list$dsn[i],".csv")))
-      colnames(temp.data.input) <- c('Year', 'Month', 'Day', 'Hour', dsn.list$dsn.label[i])
+      colnames(temp.data.input) <- c('Year', 'Month', 'Day', 'Hour', as.character(dsn.list$dsn.label[i]))
       temp.data.input$timestamp <- strptime(paste(temp.data.input$Year, "-", temp.data.input$Month, "-", temp.data.input$Day, ":", temp.data.input$Day, sep = ""), format = "%Y-%m-%d:%H")
       temp.data.formatter <- data.frame(temp.data.input$timestamp, temp.data.input[5])
+      colnames(temp.data.formatter) <- c('timestamp', colnames(temp.data.input[5]))
       assign(input.data.namer,temp.data.formatter)
     }
   }
@@ -46,5 +47,6 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
     }
   }
   assign(overall.data.namer,overall.data.builder)
-  write.csv(overall.data.builder, paste0(outpath, "/", overall.data.namer, ".csv"))
+  saved.file <- paste0(outpath, "/", overall.data.namer, ".csv")
+  write.csv(overall.data.builder, saved.file, row.names = FALSE)
 }
