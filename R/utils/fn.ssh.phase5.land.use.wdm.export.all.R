@@ -1,18 +1,17 @@
 library(ssh)
 
 # INPUTS TO ALTER
-deq2.user <- 'danielh7'
-land.segment <- 'A10001'
+land.segment <- 'A10003'
 wdmpath <- '/opt/model/p53/p532c-sova'
 mod.scenario <- 'p532cal_062211'
+deq2.user <- 'danielh7'
 start.year <- '1984'
 end.year <- '2005'
-user.at.deq2 <- paste(deq2.user, '@deq2.bse.vt.edu', sep = '')
 
+user.at.deq2 <- paste(deq2.user, '@deq2.bse.vt.edu', sep = '')
 session <- ssh_connect(user.at.deq2)
 
-ssh.land.use.unit.flows <- function(land.segment, wdmpath, mod.scenario, start.year, end.year) {
-  
+ssh.phase5.land.use.wdm.export <- function(land.segment, wdmpath, mod.scenario, start.year, end.year) {
   land.use.list <- c('afo', 'alf', 'ccn', 'cex', 'cfo', 'cid', 'cpd', 'for', 'hom', 'hvf',
                      'hwm', 'hyo', 'hyw', 'lwm', 'nal', 'nex', 'nhi', 'nho', 'nhy', 'nid',
                      'nlo', 'npa', 'npd', 'pas', 'rcn', 'rex', 'rid', 'rpd', 'trp', 'urs')
