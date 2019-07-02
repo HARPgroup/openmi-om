@@ -23,16 +23,18 @@ land.use.wdm.export.all <- function(land.segment, wdmpath, mod.scenario, start.y
       wdm.location <- paste(wdmpath, '/tmp/wdm/land/', land.use.list[j], '/', mod.scenario, sep = '')
       wdm.name <- paste0(land.use.list[j],land.segment,'.wdm')
       
-      # SETTING UP COMMAND LINE COMMANDS
+      # SETTING UP AND RUNNING COMMAND LINE COMMANDS
       cd.to.wdms <- paste('cd ', wdm.location, sep = '')
+      exec_wait(cmd = cd.to.wdms)
+      
+      print(paste("Creating unit flow .csv for ", counter, "of", total.files))
+      
       quick.wdm.2.txt.inputs <- paste(paste0(land.use.list[j],land.segment,'.wdm'), start.year, end.year, dsn.list[i], sep = ',')
       run.quick.wdm.2.txt <- paste("echo", quick.wdm.2.txt.inputs, "| /opt/model/p6-devel/p6-4.2018/code/bin/quick_wdm_2_txt_hour_2_hour", sep = ' ')
-      command <- paste(cd.to.wdms, run.quick.wdm.2.txt, sep = '; ')
+      exec_wait(cmd = run.quick.wdm.2.txt)
       
-      # RUNNING COMMAND LINE COMMANDS
-      print(paste("Creating unit flow .csv for ", counter, "of", total.files))
+      # INCREMENTING COUNTER
       counter <- counter+1
-      exec_wait(command)
     }
   }
 }
