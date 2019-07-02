@@ -30,7 +30,7 @@ land.use.wdm.export.all <- function(land.segment, wdmpath, mod.scenario, start.y
       
       quick.wdm.2.txt.inputs <- paste(paste0(land.use.list[j],land.segment,'.wdm'), start.year, end.year, dsn.list[i], sep = ',')
       run.quick.wdm.2.txt <- paste("echo", quick.wdm.2.txt.inputs, "| /opt/model/p6-devel/p6-4.2018/code/bin/quick_wdm_2_txt_hour_2_hour", sep = ' ')
-      system(cmd = run.quick.wdm.2.txt)
+      system(command = run.quick.wdm.2.txt)
       
       # INCREMENTING COUNTER
       counter <- counter+1
