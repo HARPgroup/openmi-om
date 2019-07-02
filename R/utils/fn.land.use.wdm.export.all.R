@@ -24,8 +24,9 @@ land.use.wdm.export.all <- function(land.segment, wdmpath, mod.scenario, start.y
       wdm.name <- paste0(land.use.list[j],land.segment,'.wdm')
       
       # SETTING UP AND RUNNING COMMAND LINE COMMANDS
-      cd.to.wdms <- paste('cd ', wdm.location, sep = '')
-      exec_wait(cmd = cd.to.wdms)
+      setwd(wdm.location)
+      # cd.to.wdms <- paste('cd ', wdm.location, sep = '')
+      # exec_wait(cmd = cd.to.wdms)
       
       print(paste("Creating unit flow .csv for ", counter, "of", total.files))
       
