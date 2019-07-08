@@ -31,6 +31,9 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
       print(paste("Downloading", counter, "of", total.files))
       counter <- counter+1
       temp.data.input <- try(read.csv(paste0(wdmpath, "/tmp/wdm/land/",land.use.list[j],"/",mod.scenario,"/",land.use.list[j],land.segment,"_",dsn.list$dsn[i],".csv")))
+      if (class(temp.data.input) == 'try-error') {
+        stop(paste0("ERROR: Missing land use .csv files (including ", wdmpath, "/tmp/wdm/land/",land.use.list[j],"/",mod.scenario,"/",land.use.list[j],land.segment,"_",dsn.list$dsn[i],".csv", ")"))
+      }
       colnames(temp.data.input) <- c('Year', 'Month', 'Day', 'Hour', as.character(dsn.list$dsn.label[i]))
       temp.data.input$thisdate <- strptime(paste(temp.data.input$Year, "-", temp.data.input$Month, "-", temp.data.input$Day, ":", temp.data.input$Hour, sep = ""), format = "%Y-%m-%d:%H")
       temp.data.formatter <- data.frame(temp.data.input$thisdate, temp.data.input[5])
