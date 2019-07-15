@@ -1,5 +1,6 @@
 wdm.to.csv.all <- function(wdmpath, outputdir, start.year, end.year, dsn) {
   wdm.list <- list.files(path = wdmpath, pattern = "\\.wdm$", recursive = FALSE)
+  setwd(wdmpath)
   for (i in 1:length(wdm.list)) {
     print(paste('Generating', i, 'of', length(wdm.list), 'csv files'), sep = ' ')
     quick.wdm.2.txt.inputs <- paste(wdm.list[i], start.year, end.year, dsn, sep = ',')
