@@ -6,9 +6,9 @@ wdm.to.csv.all <- function(wdmpath, outputdir, start.year, end.year, dsn) {
     run.quick.wdm.2.txt <- paste("echo", quick.wdm.2.txt.inputs, "| /opt/model/p6-devel/p6-4.2018/code/bin/quick_wdm_2_txt_hour_2_hour", sep = ' ')
     system(command = run.quick.wdm.2.txt)
     if (length(dsn) == 3) {
-      dsn.name == paste0('0', dsn)
+      dsn.name <- paste0('0', dsn)
     } else {
-      dsn.name == dsn
+      dsn.name <- dsn
     }
     csvname <- strsplit(wdm.list[i], split = ".wdm")
     csvname <- paste(csvname[[1]], '_', dsn.name, ".csv", sep = '')
