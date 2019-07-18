@@ -46,7 +46,12 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
   }
   
   # COMBINING DATA FROM EACH TYPE OF FLOW INTO A SINGLE DATA FRAME ----------
-  overall.data.namer <- paste(mod.scenario,land.segment,"eos_all", sep = "_")
+  dsn.namer <- ''
+  for (i in 1:length(dsn.list$dsn)) {
+    dsn.namer <- paste0(dsn.namer, dsn.list$dsn[i], ',')
+  }
+  dsn.namer <- substr(dsn.namer, 1, nchar(dsn.namer)-1) 
+  overall.data.namer <- paste(land.segment, "_", dsn.namer, sep = '')
   counter <- 1
   for (i in 1:length(land.use.list)) {
     for (j in 1:length(dsn.list$dsn)) {
