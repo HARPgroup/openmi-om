@@ -22,7 +22,7 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
   land.use.list <- list.dirs(paste0(wdmpath, "/tmp/wdm/land"), full.name = FALSE, recursive = FALSE)
   dsn.list <- data.frame(dsn = c('0111', '0211', '0411'), dsn.label = c('suro', 'ifwo', 'agwo'))
   
-  # READING IN LAND USE DATA FROM MODEL ----------
+  # READING IN AND DELETING READ-IN LAND USE DATA FROM MODEL ----------
   counter <- 1
   total.files <- as.integer(length(land.use.list)*length(dsn.list$dsn))
   for (i in 1:length(dsn.list$dsn)) {
@@ -39,6 +39,9 @@ land.use.eos.all <- function(land.segment, wdmpath, mod.scenario, outpath) {
       temp.data.formatter <- data.frame(temp.data.input$thisdate, temp.data.input[5])
       colnames(temp.data.formatter) <- c('thisdate', colnames(temp.data.input[5]))
       assign(input.data.namer,temp.data.formatter)
+      # Deleting read in file:
+      command <- paste0('rm ', wdmpath, "/tmp/wdm/land/",land.use.list[j],"/",mod.scenario,"/",land.use.list[j],land.segment,"_",dsn.list$dsn[i],".csv")
+      system(command)
     }
   }
   
