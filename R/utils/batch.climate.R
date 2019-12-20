@@ -6,7 +6,7 @@ batch.climate <- function(outpath) {
   segs <- sapply(strsplit(names.pt1, "_1000.csv"), "[[", 1)
   
   for (i in 1:length(segs)) {
-    climate_evap.and.prcp(segment = segs(i), wdmpath = '/opt/model/p6/p6_gb604', outpath = outpath)
+    climate_evap.and.prcp(segment = segs[i], wdmpath = '/opt/model/p6/p6_gb604', outpath = outpath)
     print('creating .csv file', i, 'of', length(segs), sep = ' ')
   }
 }
