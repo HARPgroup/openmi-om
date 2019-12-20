@@ -7,6 +7,6 @@ batch.climate <- function(outpath) {
   
   for (i in 1:length(segs)) {
     climate_evap.and.prcp(segment = segs[i], wdmpath = '/opt/model/p6/p6_gb604', outpath = outpath)
-    print('creating .csv file', i, 'of', length(segs), sep = ' ')
+    print(paste('creating .csv file', i, 'of', length(segs), sep = ' '))
   }
 }
