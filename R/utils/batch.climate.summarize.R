@@ -4,7 +4,7 @@ batch.climate.summarize <- function(dirpath) {
   evap.prcp.table <- data.frame(matrix(data = NA, nrow = length(csv.list), ncol = 3))
   colnames(evap.prcp.table) = c('segment', 'evap.mean', 'prcp.mean')
   for (i in 1:length(csv.list)) {
-    data <- try(read.csv(paste0(dirpath, csv.list[i], sep = '/')))
+    data <- try(read.csv(paste(dirpath, csv.list[i], sep = '/')))
     
     segment <- substr(csv.list[i], 1, 6)
     
