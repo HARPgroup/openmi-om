@@ -6,7 +6,7 @@ batch.climate.summarize <- function(dirpath) {
   for (i in 1:length(csv.list)) {
     data <- try(read.csv(paste(dirpath, csv.list[i], sep = '/')))
     
-    print('Downloading data for segment', i, 'of', length(csv.list), sep = ' ')
+    print(paste('Downloading data for segment', i, 'of', length(csv.list), sep = ' '))
     
     segment <- substr(csv.list[i], 1, 6)
     
