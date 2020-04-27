@@ -17,5 +17,5 @@ batch.climate.summarize <- function(dirpath) {
     evap.prcp.table$prcp.mean[i] <- mean(as.numeric(data$prcp))
   }
   
-  write.csv(evap.prcp.table, paste0(dirpath, 'evap.prcp.table'))
+  write.csv(evap.prcp.table, paste(dirpath, 'evap.prcp.table.csv', sep = '/'))
 }
