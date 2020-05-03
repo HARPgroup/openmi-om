@@ -5,6 +5,8 @@ batch.climate.summarize <- function(dirpath) {
   colnames(evap.prcp.table) = c('segment', 'evap.mean', 'prcp.mean')
   for (i in 1:length(csv.list)) {
     data <- try(read.csv(paste(dirpath, csv.list[i], sep = '/')))
+    trim <- which(as.Date(data$thisdate) >= as.Date('1991-01-01') & as.Date(data$thisdate) <= as.Date('2000-12-31'))
+    data <- data[trim,]
     
     print(paste('Downloading data for segment', i, 'of', length(csv.list), sep = ' '))
     
