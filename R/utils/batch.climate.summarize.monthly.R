@@ -1,3 +1,5 @@
+library(lubridate)
+
 batch.climate.summarize.monthly <- function(dirpath) {
   csv.list <- list.files(path = dirpath, pattern = "_1000-2000\\.csv$", recursive = FALSE)
   
