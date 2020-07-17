@@ -19,10 +19,16 @@ batch.climate.summarize <- function(dirpath) {
     evap.prcp.table$segment[i] <- segment
     evap.prcp.table$evap.mean[i] <- mean(as.numeric(data$evap))
     evap.prcp.table$prcp.mean[i] <- mean(as.numeric(data$prcp))
-    evap.prcp.table$evap.l30[i] <- num_day_min(data$evap, num.day = 30, min_or_med = "min")
-    evap.prcp.table$prcp.l30[i] <- num_day_min(data$prcp, num.day = 30, min_or_med = "min")
-    evap.prcp.table$evap.l90[i] <- num_day_min(data$evap, num.day = 90, min_or_med = "min")
-    evap.prcp.table$prcp.l90[i] <- num_day_min(data$prcp, num.day = 90, min_or_med = "min")
+    
+    data.evap <- aggregate(evap ~ as.Date(thisdate), data, FUN = sum)
+    colnames(data.evap) <- c('date', 'flow')
+    data.prcp <- aggregate(prcp ~ as.Date(thisdate), data, FUN = sum)
+    colnames(data.prcp) <- c('date', 'flow')
+    
+    evap.prcp.table$evap.l30[i] <- num_day_min(data.evap, num.day = 30, min_or_med = "min")
+    evap.prcp.table$prcp.l30[i] <- num_day_min(data.prcp, num.day = 30, min_or_med = "min")
+    evap.prcp.table$evap.l90[i] <- num_day_min(data.evap, num.day = 90, min_or_med = "min")
+    evap.prcp.table$prcp.l90[i] <- num_day_min(data.prcp, num.day = 90, min_or_med = "min")
     
   }
   
