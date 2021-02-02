@@ -7,8 +7,8 @@ library("lubridate")
 library("jsonlite")
 
 
-#hydro_tools <- 'C:\\usr\\local\\home\\git\\hydro-tools\\'#location of hydro-tools repo
-hydro_tools <- 'C:\\Users\\nrf46657\\Desktop\\VAHydro Development\\GitHub\\hydro-tools\\'#location of hydro-tools repo
+hydro_tools <- 'C:\\usr\\local\\home\\git\\hydro-tools\\'#location of hydro-tools repo
+#hydro_tools <- 'C:\\Users\\nrf46657\\Desktop\\VAHydro Development\\GitHub\\hydro-tools\\'#location of hydro-tools repo
 source(paste(hydro_tools,"VAHydro-2.0","rest_functions.R", sep = "\\")) #load REST functions
 source(paste(hydro_tools,"auth.private", sep = "\\"))
 token <- rest_token(site, token, rest_uname, rest_pw);
