@@ -104,6 +104,30 @@ openmi.om.matrix <- setRefClass(
       }
       return(rval)
     },
+    
+    window = function(dm, ixval, ixoff) {
+      # get values prior to and after ixval, use ixoff to help guess
+      if (is.null(ncol(dm))) {
+        # given only a 1-column entity
+        lm = dm
+      } else {
+        lm = dm[,1]
+      }
+      # get closest match to ixval
+      # search for previous and next to ixval
+      # create a matrix with the 3 entries before ixval, ixval, and after ixval
+      # apply desired ssearch function (stairStep, interp)
+      # could use the "closest()" method below??? 
+      # - Or is there a more convenient R func?
+      six = which.min(abs(lm - ixval + ixoff)); # guess start of interval
+      eix = which.min(abs(lm - ixval + ixoff)); # guess end of interval
+      if (is.null(ncol(dm))) {
+        rval = dm[rix]
+      } else {
+        rval = dm[rix,]
+      }
+      return(rval)
+    },
 
     closest = function(dm, ixval) {
       # match row & col exactly

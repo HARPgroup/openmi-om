@@ -157,6 +157,9 @@ openmi.om.base <- setRefClass(
     },
     orderOperations = function () {
       # sets basic hierarchy of execution by re-ordering the components list
+    },
+    asJSON = function () {
+      #TBD
     }
   )
 )
