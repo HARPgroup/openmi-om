@@ -5,42 +5,40 @@
 #' @seealso
 #' @import lubridate
 #' @export openmi.om.timer
-openmi.om.timer <- setRefClass(
+openmi.om.timer <- R6Class(
   "openmi.om.timer",
-  fields = list(
-    starttime = "POSIXct",
-    endtime = "POSIXct",
-    thistime = "POSIXct",
-    status = "character",
-    mo = "integer",
-    da = "integer",
-    yr = "integer",
-    tz = "integer",
-    dt = "numeric" # time step increment in seconds
-  ),
-  methods = list(
+  public = list(
+    starttime = NA,
+    endtime = NA,
+    thistime = NA,
+    status = NA,
+    mo = NA,
+    da = NA,
+    yr = NA,
+    tz = NA,
+    dt = NA, # time step increment in seconds,
     update = function() {
-      if (length(thistime) == 0) {
-        thistime <<- starttime
-        status <<- 'running'
+      if (length(self$thistime) == 0) {
+        self$thistime <- self$starttime
+        self$status <- 'running'
       }
-      #thistime <<- thistime + duration(dt, "seconds")
-      thistime <<- thistime + seconds(dt)
-      mo <<- as.integer(format(thistime,'%m'))
-      da <<- as.integer(format(thistime,'%d'))
-      yr <<- as.integer(format(thistime,'%Y'))
-      if (thistime > endtime) {
-        status <<- 'finished'
+      #thistime <- thistime + duration(dt, "seconds")
+      self$thistime <- self$thistime + seconds(self$dt)
+      self$mo <- as.integer(format(self$thistime,'%m'))
+      self$da <- as.integer(format(self$thistime,'%d'))
+      self$yr <- as.integer(format(self$thistime,'%Y'))
+      if (self$thistime > self$endtime) {
+        self$status <- 'finished'
       }
     },
-    initialize = function() {
-      if (length(dt) == 0) {
-        dt <<- 86400
+    init = function() {
+      if (length(self$dt) == 0) {
+        self$dt <- 86400
       }
-      mo <<- as.integer(format(thistime,'%m'))
-      da <<- as.integer(format(thistime,'%d'))
-      yr <<- as.integer(format(thistime,'%Y'))
-      status <<- 'initialized'
+      self$mo <- as.integer(format(self$thistime,'%m'))
+      self$da <- as.integer(format(self$thistime,'%d'))
+      self$yr <- as.integer(format(self$thistime,'%Y'))
+      self$status <- 'initialized'
     }
   )
 )

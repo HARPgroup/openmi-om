@@ -1,3 +1,5 @@
+library(stringr)
+library(httr)
 #' The base class for executable equation based meta-model components.
 #'
 #' @param
@@ -5,33 +7,32 @@
 #' @seealso
 #' @export openmi.om.equation
 #' @examples
-openmi.om.equation <- setRefClass(
+#' @include openmi.om.linkableComponent.R
+openmi.om.equation <- R6Class(
   "openmi.om.equation",
-  fields = list(
-    equation = "character",
-    eq = "expression",
-    defaultvalue = "numeric"
-  ),
-  contains = "openmi.om.linkableComponent",
-  methods = list(
-    initialize = function() {
-      callSuper()
-      if (length(defaultvalue) == 0) {
-        defaultvalue <<- 0
+  inherit = openmi.om.linkableComponent,
+  public = list(
+    equation = character,
+    eq = expression,
+    defaultvalue = numeric,
+    init = function() {
+      super$init()
+      if (length(self$defaultvalue) == 0) {
+        self$defaultvalue <- 0
       }
-      value <<- defaultvalue
-      eq <<- parse(text=equation)
+      self$value <- defaultvalue
+      self$eq <- parse(text=equation)
     },
     update = function() {
-      callSuper()
+      super$update()
       # evaluating an equation should be:
       # 1. restricted to variables in the local $data array
       # step() in OM php
-      data$value <<- value
-      preval = eval(eq, data)
-      value <<- as.numeric(preval)
+      self$data$value <- value
+      preval = eval(self$eq, self$data)
+      self$value <- as.numeric(preval)
       if (debug) {
-        print(paste("eq = ", equation, " value = ", value))
+        message(paste("eq = ", self$equation, " value = ", self$value))
       }
     }
   )

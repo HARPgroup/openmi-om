@@ -5,11 +5,11 @@
 #' @seealso
 #' @export openmi.om.linkableComponent
 #' @examples
-openmi.om.linkableComponent <- setRefClass(
+openmi.om.linkableComponent <- R6Class(
   "openmi.om.linkableComponent",
-  fields = list(
+  inherit = "openmi.om.base",
+  public = list(
     value = "numeric",
     code = "character"
-  ),
-  contains = "openmi.om.base"
+  )
 )

@@ -5,20 +5,22 @@
 #' @seealso
 #' @export openmi.om.runtimeController
 #' @examples
-openmi.om.runtimeController <- setRefClass(
+#' @include openmi.om.linkableComponent.R
+openmi.om.runtimeController <- R6Class(
   "openmi.om.runtimeController",
-  fields = list(
-    code = "character"
-  ),
-  contains = "openmi.om.base",
-  methods = list(
+  inherit = openmi.om.base,
+  public = list(
+    code = character,
+    initialize = function() {
+      self$timer <- openmi.om.timer$new()
+    },
     checkRunVars = function() {
-      if (!is.null(timer)) {
-        if (is.null(timer$starttime)) {
+      if (!is.null(self$timer)) {
+        if (is.null(self$timer$starttime)) {
           print("Timer$starttime required. Exiting.")
           return(FALSE)
         } else {
-          if (is.null(timer$endtime)) {
+          if (is.null(self$timer$endtime)) {
             print("Timer$endtime required. Exiting.")
             return(FALSE)
           }
@@ -30,11 +32,11 @@ openmi.om.runtimeController <- setRefClass(
       return(TRUE)
     },
     run = function() {
-      runok = checkRunVars()
+      runok = self$checkRunVars()
       if (runok) {
-        while (timer$status != 'finished') {
-          print(paste("Model update() @", timer$thistime,sep=""))
-          update()
+        while (self$timer$status != 'finished') {
+          print(paste("Model update() @", self$timer$thistime,sep=""))
+          self$update()
         }
         print("Run completed.")
       } else {
@@ -42,13 +44,13 @@ openmi.om.runtimeController <- setRefClass(
       }
     },
     update = function() {
-      callSuper()
+      super$update()
       # Update the timer afterwards
-      timer$update()
+      self$timer$update()
     },
-    initialize = function() {
-      callSuper()
-      timer$initialize()
+    init = function() {
+      super$init()
+      self$timer$init()
     }
   )
 )

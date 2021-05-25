@@ -5,6 +5,7 @@
 #' @seealso
 #' @export openmi.om.matrix
 #' @examples
+#' @include openmi.om.linkableComponent.R
 openmi.om.matrix <- setRefClass(
   "openmi.om.matrix",
   fields = list(
@@ -104,7 +105,7 @@ openmi.om.matrix <- setRefClass(
       }
       return(rval)
     },
-    
+
     window = function(dm, ixval, ixoff) {
       # get values prior to and after ixval, use ixoff to help guess
       if (is.null(ncol(dm))) {
@@ -117,7 +118,7 @@ openmi.om.matrix <- setRefClass(
       # search for previous and next to ixval
       # create a matrix with the 3 entries before ixval, ixval, and after ixval
       # apply desired ssearch function (stairStep, interp)
-      # could use the "closest()" method below??? 
+      # could use the "closest()" method below???
       # - Or is there a more convenient R func?
       six = which.min(abs(lm - ixval + ixoff)); # guess start of interval
       eix = which.min(abs(lm - ixval + ixoff)); # guess end of interval
