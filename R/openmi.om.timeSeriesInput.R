@@ -5,6 +5,7 @@
 #' @seealso
 #' @export openmi.om.timeSeriesInput
 #' @examples
+#' @include openmi.om.linkableComponent.R
 openmi.om.timeSeriesInput <- setRefClass(
   "openmi.om.timeSeriesInput",
   fields = list(

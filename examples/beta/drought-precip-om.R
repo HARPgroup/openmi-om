@@ -263,5 +263,6 @@ m$initialize()
 # Run Model
 #****************************
 m$run()
+
 #output log file
 write.table(logger$outputs,logger$path, sep = "\t")
