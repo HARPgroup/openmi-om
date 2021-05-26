@@ -11,7 +11,7 @@ openmi.om.base <- R6Class(
   public = list(
     name = NA,
     debug = NA,
-    value = numeric,
+    value = NA,
     data = NA,
     inputs = NA,
     components = NA,
@@ -20,7 +20,54 @@ openmi.om.base <- R6Class(
     compid = NA,
     timer = openmi.om.timer,
     id = NA,
-    initialize = function(elem_list = list()){
+    initialize = function(elem_list = list(), format = 'raw'){
+      for (i in names(elem_list)) {
+        self$set_prop(i, elem_list[[i]], format)
+      }
+    },
+    settable = function() {
+      return(c('name', 'host'))
+    },
+    set_prop = function(propname, propvalue, format = 'raw') {
+      if (format == 'openmi') {
+        propvalue = self$parse_openmi(propvalue)
+      }
+      # is it allowed to be set?
+      if (propname == 'name') {
+        self$name <- propvalue
+      }
+      if (propname == 'host') {
+        self$host <- propvalue
+      }
+      self$set_sub_prop(propname, propvalue)
+    },
+    parse_openmi = function(propvalue) {
+      # check for special handlers needed
+      # all openMI formatted will have a object_class and value field
+      if (match('object_class', names(propvalue))) {
+        object_class = as.character(propvalue[['object_class']])
+      } else {
+        # assume it's textField
+        object_class = 'textField'
+      }
+      if (is.na(match('value', names(propvalue)))) {
+        propvalue = NULL
+      } else {
+        if (object_class == 'textField') {
+          propvalue <- as.character(propvalue[['value']])
+        } else {
+          # TBD: handle other types like data matrix in child classes
+          propvalue <- as.character(propvalue[['value']])
+        }
+      }
+      return(propvalue)
+    },
+    set_sub_prop = function(propname, propvalue) {
+      if (!is.na(match(propname, names(self$components)))) {
+        # pass to the component
+        obj <- self$components[propname]
+        obj$set_prop(propname, propvalue)
+      }
     },
     init = function(){
       if (length(self$debug) == 0) {
@@ -134,6 +181,39 @@ openmi.om.base <- R6Class(
       )
     },
     addComponent = function (thiscomp = openmi.om.base) {
+      # this is deprecated in favor of the naming convention _
+      return(self$add_component(thiscomp))
+    },
+    # components are small objects that reside inside this object
+    # these *were* called processors in the old version of the model
+    # other models are handled exclusively by the runtime controller/container
+    # and they *may be* known as model_entities -- or they may *also*
+    # be known as components: is there any reason
+    # to have a separate concept of components and sub_components? run hierarchy?
+    add_component = function (thiscomp = openmi.om.base) {
+      compid = self$get_component_id(thiscomp)
+      message(paste("Created compid =", compid))
+      thiscomp$compid <- compid
+      thiscomp$timer = self$timer
+      self$components[compid] <- list('object' = thiscomp)
+    },
+    get_component_id = function(thiscomp) {
+
+      # we can add this with numeric indices if we like
+      # however, we must have a way of linking objects, which
+      # requires a persistent name, i.e. a sort of DOI
+      # format: host:type:id, examples:
+      #   localhost:feature:647 (well 647),
+      #   localhost:component:1991 (the withdrawal amt)
+      # Input/Link format:
+      #   localname:host:type:id:[remote name]
+      #   - if property name is null then just use getValue() without parameter
+      #print(thiscomp$compid)
+
+      # we may need to use this for model controllers, but for now we just return the name
+      return(as.character(thiscomp$name))
+
+      # tbd: do we need this for *regular* models, not containers?
       if (length(thiscomp$host) == 0) {
         thiscomp$host = 'localhost'
       }
@@ -148,19 +228,8 @@ openmi.om.base <- R6Class(
         }
         thiscomp$id = paste('local', cid, sep='');
       }
-      thiscomp$compid = paste(thiscomp$host,thiscomp$type,thiscomp$id, sep=":")
-      # we can add this with numberic indices if we like
-      # however, we must have a way of linking objects, which
-      # requires a persistent name, i.e. a sort of DOI
-      # format: host:type:id, examples:
-      #   localhost:feature:647 (well 647),
-      #   localhost:component:1991 (the withdrawal amt)
-      # Input/Link format:
-      #   localname:host:type:id:[remote name]
-      #   - if property name is null then just use getValue() without parameter
-      #print(thiscomp$compid)
-      thiscomp$timer = self$timer
-      self$components[thiscomp$compid] <- list('object' = thiscomp)
+      thiscomp$compid = paste(thiscomp$name, thiscomp$host,thiscomp$type,thiscomp$id, sep=":")
+      return(thiscomp)
     },
     orderOperations = function () {
       # sets basic hierarchy of execution by re-ordering the components list

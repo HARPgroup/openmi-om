@@ -23,22 +23,6 @@ for (i in index(model_objects)) {
 # sub-properties of whtf_natevap_mgd property
 # names(load_objects["0. Lake Anna: Dominion Power"][[1]]["whtf_natevap_mgd"][[1]])
 
-openmi_om_load <- function(elem_list) {
-  if (!is.null(elem_list$object_class)) {
-    message(paste("Found", elem_list$object_class))
-    if (elem_list$object_class == 'Equation') {
-      # we got this
-      elem_obj <- openmi.om.equation(elem_list)
-    } elseif (elem_list$object_class == 'textField') {
-      if (!is.null(elem_list$value)) {
-        elem_obj <- elem_list$value
-      }
-    }    else {
-      elem_obj <- openmi.om.base()
-    }
-  }
-}
-
 
 #****************************
 # BEGIN Model
@@ -54,13 +38,29 @@ m$timer$endtime = as.POSIXct('1999-09-30')
 m$timer$thistime = m$timer$starttime
 m$timer$dt <- 86400
 
+# since the root object is returned embedded in the json we need to extract it
+obj_json <- load_objects["0. Lake Anna: Dominion Power"][[1]]
+# this is the same as this:
+obj_json <- load_objects[names(load_objects)[1]]
+obj <- openmi_om_load_single(obj_json)
+obj <- openmi_om_load(obj_json)
 
-obj <- load_objects["0. Lake Anna: Dominion Power"][[1]]
-m$addComponent(openmi_om_load(obj))
 
-for (j in names(obj)) {
-  openmi_om_load(obj[j])
-}
+# this seems to work
+obj$components$whtf_diff$parse_openmi(obj_json$whtf_diff$equation)
+# but this was not parsed right as part of the batch.
+obj$components$whtf_diff$equation
+
+
+#
+obj <- openmi.om.base$new(list(name='test'))
+wyb <- openmi.om.equation$new(list(name='wyb', equation='water.year(timer$thistime) - 1'));
+#wyb$equation = "water.year(timer$thistime) - 1";
+obj$add_component(wyb)
+
+# finally add this to a simulation engine
+
+m$addComponent(obj)
 #****************************
 # Call initialize for model and all children
 #****************************
@@ -92,7 +92,7 @@ m$addComponent(k)
 #################################
 # Add debugging equation
 #################################
-wyb <- openmi.om.equation();
+wyb <- openmi.om.equation$new();
 wyb$equation = "water.year(timer$thistime) - 1";
 m$addComponent(wyb)
 # current month

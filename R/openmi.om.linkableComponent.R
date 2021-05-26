@@ -7,9 +7,9 @@
 #' @examples
 openmi.om.linkableComponent <- R6Class(
   "openmi.om.linkableComponent",
-  inherit = "openmi.om.base",
+  inherit = openmi.om.base,
   public = list(
-    value = "numeric",
-    code = "character"
+    value = NA,
+    code = NA
   )
 )
