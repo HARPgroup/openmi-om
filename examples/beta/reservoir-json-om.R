@@ -12,16 +12,8 @@ library("hydrotools")
 # Import JSON Objects
 #****************************
 src_json <- 'https://raw.githubusercontent.com/HARPgroup/vahydro/master/data/vahydro-1.0/YP2_6390_6330.json'
+src_json <- 'https://raw.githubusercontent.com/HARPgroup/vahydro/master/data/vahydro-1.0/YP2_6390_6330-small.json'
 load_objects <- fromJSON(file = src_json)
-model_objects <- names(load_objects)
-for (i in index(model_objects)) {
-  elemname <- model_objects[i]
-  names(load_objects[elemname][[1]])
-}
-# properties of Lake Anna impoundment:
-# names(load_objects["0. Lake Anna: Dominion Power"][[1]])
-# sub-properties of whtf_natevap_mgd property
-# names(load_objects["0. Lake Anna: Dominion Power"][[1]]["whtf_natevap_mgd"][[1]])
 
 
 #****************************
@@ -34,33 +26,37 @@ for (i in index(model_objects)) {
 #
 m <- openmi.om.runtimeController$new();
 m$timer$starttime = as.POSIXct('1997-10-01')
-m$timer$endtime = as.POSIXct('1999-09-30')
+m$timer$endtime = as.POSIXct('1997-10-31')
 m$timer$thistime = m$timer$starttime
 m$timer$dt <- 86400
 
 # since the root object is returned embedded in the json we need to extract it
 obj_json <- load_objects["0. Lake Anna: Dominion Power"][[1]]
-# this is the same as this:
-obj_json <- load_objects[names(load_objects)[1]]
-obj <- openmi_om_load_single(obj_json)
+# this *should* be the same as ^ (but it's not) - figure it out...
+# obj_json <- load_objects[names(load_objects)[1]]
+#obj <- openmi_om_load_single(obj_json)
 obj <- openmi_om_load(obj_json)
 
-
-# this seems to work
-obj$components$whtf_diff$parse_openmi(obj_json$whtf_diff$equation)
-# but this was not parsed right as part of the batch.
-obj$components$whtf_diff$equation
-
-
-#
-obj <- openmi.om.base$new(list(name='test'))
-wyb <- openmi.om.equation$new(list(name='wyb', equation='water.year(timer$thistime) - 1'));
-#wyb$equation = "water.year(timer$thistime) - 1";
-obj$add_component(wyb)
-
 # finally add this to a simulation engine
-
 m$addComponent(obj)
+# add a counter of month
+mo_plus_one <- openmi.om.equation$new();
+mo_plus_one$equation = "mo + 1";
+m$addComponent(mo_plus_one)
+# Test the data sharing
+
+# add a counter of month
+mo_input <- openmi.om.base$new();
+mo_input$addInput('mop1', mo_plus_one, 'value')
+m$addComponent(mo_input)
+# this won't yet work unless we:
+#  a) add mop1 as an explicit inpout to mop_times_ten
+#  b) enable the arData/state sharingof children (which we will do)
+mop_times_ten <- openmi.om.equation$new();
+mop_times_ten$equation = "mop1 * 10";
+m$addComponent(mop_times_ten)
+
+
 #****************************
 # Call initialize for model and all children
 #****************************

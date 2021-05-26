@@ -10,10 +10,11 @@ openmi.om.base <- R6Class(
   'openmi.om.base',
   public = list(
     name = NA,
-    debug = NA,
+    debug = FALSE,
     value = NA,
-    data = NA,
-    inputs = NA,
+    data = NA, # data from the larger context, including the parent. was arData in om
+    state = NA, # this objects local state. was state in om
+    inputs = list(),
     components = NA,
     host = NA,
     type = NA,
@@ -22,7 +23,7 @@ openmi.om.base <- R6Class(
     id = NA,
     initialize = function(elem_list = list(), format = 'raw'){
       for (i in names(elem_list)) {
-        self$set_prop(i, elem_list[[i]], format)
+        self$set_prop(as.character(i), elem_list[[i]], format)
       }
     },
     settable = function() {
@@ -44,7 +45,12 @@ openmi.om.base <- R6Class(
     parse_openmi = function(propvalue) {
       # check for special handlers needed
       # all openMI formatted will have a object_class and value field
-      if (match('object_class', names(propvalue))) {
+      # however, this format can include both flat values and arrays,
+      # so detect flat value and return if found
+      if (is.null(names(propvalue))) {
+        return(propvalue)
+      }
+      if (!is.na(match('object_class', names(propvalue)))) {
         object_class = as.character(propvalue[['object_class']])
       } else {
         # assume it's textField
@@ -62,11 +68,11 @@ openmi.om.base <- R6Class(
       }
       return(propvalue)
     },
-    set_sub_prop = function(propname, propvalue) {
+    set_sub_prop = function(propname, propvalue, format = 'raw') {
       if (!is.na(match(propname, names(self$components)))) {
         # pass to the component
         obj <- self$components[propname]
-        obj$set_prop(propname, propvalue)
+        obj$set_prop(propname, propvalue, format)
       }
     },
     init = function(){
@@ -74,7 +80,9 @@ openmi.om.base <- R6Class(
         self$debug <- FALSE
       }
       # init() in OM php
-      if (!is.na(self$components)) {
+      # if we have no components, this will be NA,
+      # if we *do* have them, then it becomes a list so we iterate thru them
+      if (typeof(self$components) == 'list') {
         if (length(self$components) > 0) {
           for (i in 1:length(self$components)) {
             self$components[[i]]$init()
@@ -113,7 +121,7 @@ openmi.om.base <- R6Class(
               }
               self$data[i_name] <- self$data[[i_name]] + as.numeric(i_value)
               #data[i_name] <- i_value
-              if (debug) {
+              if (self$debug) {
                 print(paste("obtained and converted input", i_name, i_value,sep='='))
               }
             }
@@ -130,8 +138,11 @@ openmi.om.base <- R6Class(
       self$prepare()
       if (!is.na(self$components)) {
         for (i in 1:length(self$components)) {
+          #message(paste("Calling update() on ", i))
           self$components[[i]]$update()
         }
+      } else {
+        #message(paste("components on object", self$name, "is.na"))
       }
       self$finish()
       self$logState()
@@ -195,6 +206,9 @@ openmi.om.base <- R6Class(
       message(paste("Created compid =", compid))
       thiscomp$compid <- compid
       thiscomp$timer = self$timer
+      if (is.na(self$components)) {
+        self$components = list()
+      }
       self$components[compid] <- list('object' = thiscomp)
     },
     get_component_id = function(thiscomp) {
