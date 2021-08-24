@@ -50,6 +50,7 @@ NA
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="prepare">}\href{../../openmi.om/html/openmi.om.base.html#method-prepare}{\code{openmi.om::openmi.om.base$prepare()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_prop">}\href{../../openmi.om/html/openmi.om.base.html#method-set_prop}{\code{openmi.om::openmi.om.base$set_prop()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_sub_prop">}\href{../../openmi.om/html/openmi.om.base.html#method-set_sub_prop}{\code{openmi.om::openmi.om.base$set_sub_prop()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_vars">}\href{../../openmi.om/html/openmi.om.base.html#method-set_vars}{\code{openmi.om::openmi.om.base$set_vars()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="settable">}\href{../../openmi.om/html/openmi.om.base.html#method-settable}{\code{openmi.om::openmi.om.base$settable()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="validate">}\href{../../openmi.om/html/openmi.om.base.html#method-validate}{\code{openmi.om::openmi.om.base$validate()}}\out{</span>}
 }

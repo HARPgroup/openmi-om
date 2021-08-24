@@ -33,6 +33,8 @@ openmi.om.base <- R6Class(
     type = NA,
     #' @field compid is a unique identifier in this simulation domain
     compid = NA,
+    #' @field vars is an array of variables that this requires for solving, determines op order
+    vars = NA,
     #' @field timer is the object keepign time in simulation (set by parent controller)
     timer = openmi.om.timer,
     #' @field id is identifier (compid, name duplicates?)
@@ -129,6 +131,17 @@ openmi.om.base <- R6Class(
           }
         }
       }
+      self$set_vars()
+    },
+    #' @description set_vars finds all the input var names for this function
+    #' @return NULL
+    set_vars = function() {
+      # populates the vars array
+      # may be subclassed
+      # TBD: get any inputs used by this for better stand0alone object ordering
+      #      note: standalone ordering is NOT available in original OM php
+      #      maybe this is better handled separately since there are object refs tied to inputs?
+      self$vars <- c()
     },
     #' @description get all input values from linked components
     #' @return NULL

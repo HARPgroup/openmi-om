@@ -49,6 +49,8 @@ NA
 \item \href{#method-get_operators}{\code{openmi.om.equation$get_operators()}}
 \item \href{#method-set_prop}{\code{openmi.om.equation$set_prop()}}
 \item \href{#method-init}{\code{openmi.om.equation$init()}}
+\item \href{#method-parse}{\code{openmi.om.equation$parse()}}
+\item \href{#method-set_vars}{\code{openmi.om.equation$set_vars()}}
 \item \href{#method-update}{\code{openmi.om.equation$update()}}
 \item \href{#method-evaluate}{\code{openmi.om.equation$evaluate()}}
 \item \href{#method-clone}{\code{openmi.om.equation$clone()}}
@@ -150,9 +152,35 @@ NA
 \if{html}{\out{<a id="method-init"></a>}}
 \if{latex}{\out{\hypertarget{method-init}{}}}
 \subsection{Method \code{init()}}{
-init parses equation and then passes on to parent class
+init sets up data, parses equation and then passes on to parent class
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openmi.om.equation$init()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-parse"></a>}}
+\if{latex}{\out{\hypertarget{method-parse}{}}}
+\subsection{Method \code{parse()}}{
+parse parses equation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.equation$parse()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_vars"></a>}}
+\if{latex}{\out{\hypertarget{method-set_vars}{}}}
+\subsection{Method \code{set_vars()}}{
+set_vars finds all the input var names for this function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.equation$set_vars()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

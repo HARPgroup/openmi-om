@@ -80,15 +80,33 @@ openmi.om.equation <- R6Class(
       }
       self$set_sub_prop(propname, propvalue, format)
     },
-    #' @description init parses equation and then passes on to parent class
+    #' @description init sets up data, parses equation and then passes on to parent class
     #' @return NULL
     init = function() {
-      super$init()
       if (length(self$defaultvalue) == 0) {
         self$defaultvalue <- 0
       }
       self$value <- self$defaultvalue
+      self$parse()
+      super$init()
+    },
+    #' @description parse parses equation
+    #' @return NULL
+    parse = function () {
       self$eq <- parse(text=self$equation)
+      # now that we've parsed we can get the variables and operators in use
+    },
+    #' @description set_vars finds all the input var names for this function
+    #' @return NULL
+    set_vars = function() {
+      super$set_vars()
+      plist <- getParseData(self$eq)
+      for (i in 1:nrow(plist)) {
+        pdi <- plist[i,]
+        if (str_to_lower(pdi$token) == 'symbol') {
+          self$vars <- rbind(self$vars, pdi$text)
+        }
+      }
     },
     #' @description update executes the parsed equation, sets object value prop
     #' @return NULL
