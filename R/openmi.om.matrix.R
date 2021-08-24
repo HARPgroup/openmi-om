@@ -204,8 +204,8 @@ openmi.om.matrix <- R6Class(
       if (length(self$colindex) == 0) {
         self$colindex <- 1
       }
-      self$data['rowindex'] <- rowindex
-      self$data['colindex'] <- colindex
+      self$data['rowindex'] <- self$rowindex
+      self$data['colindex'] <- self$colindex
       if (length(self$datamatrix) == 0) {
         self$datamatrix <-matrix(nrow=1,ncol=1)
       }

@@ -14,7 +14,10 @@ model_prop <- RomProperty$new(ds,list(featureid = 71807, entity_type = 'dh_featu
 src_json_node <- paste('https://deq1.bse.vt.edu/d.dh/node/62', model_prop$pid, sep="/")
 load_txt <- ds$auth_read(src_json_node, "text/json", "")
 load_objects <- fromJSON(load_txt)
-model <- load_objects[[model_prop$propname]]
+model_json <- load_objects[[model_prop$propname]]
+model <-  openmi_om_load(model_json)
+model$init()
+model$pump_cfs$vars
 
 # Now, just test with a single
 # load the open mi data format
