@@ -1,22 +1,35 @@
-#' The base time-keeping class for simulation control.
+#' The base time-keeping class for simulation control
 #'
-#' @param
-#' @return reference class of type openmi.om.timer
+#' @description Class providing the minimum attributes and methods for a model component
+#' @details Has standard methods for iterating through timesteps and connecting with other components
+#' @importFrom R6 R6Class
+#' @return R6 class of type openmi.om.timer
 #' @seealso
 #' @import lubridate
 #' @export openmi.om.timer
 openmi.om.timer <- R6Class(
   "openmi.om.timer",
   public = list(
+    #' @field starttime beginning of simulation
     starttime = NA,
+    #' @field endtime end of simulation
     endtime = NA,
+    #' @field thistime current simulation time
     thistime = NA,
+    #' @field status is this timer running, paused, finished
     status = NA,
+    #' @field mo current simulation month
     mo = NA,
+    #' @field da current simulation day
     da = NA,
+    #' @field yr current simulation year
     yr = NA,
+    #' @field tz current timezone
     tz = NA,
+    #' @field dt time step
     dt = NA, # time step increment in seconds,
+    #' @description advance timer one timestep and update data
+    #' @return NULL
     update = function() {
       if (length(self$thistime) == 0) {
         self$thistime <- self$starttime
@@ -31,6 +44,8 @@ openmi.om.timer <- R6Class(
         self$status <- 'finished'
       }
     },
+    #' @description initialize for a model run
+    #' @return NULL
     init = function() {
       if (length(self$dt) == 0) {
         self$dt <- 86400

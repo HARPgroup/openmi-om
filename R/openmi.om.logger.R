@@ -3,36 +3,32 @@
 #****************************
 #' The base class for logging component data.
 #'
-#' @param
 #' @return reference class of type openmi.om.linkableComponent
 #' @seealso
 #' @export openmi.om.logger
-#' @examples
-openmi.om.logger <- setRefClass(
-  "openmi.om.logger",
-  fields = list(
-    directory = "character",
-    path = "character",
-    filename = "character",
-    outputs = "ANY"
-  ),
-  contains = "openmi.om.linkableComponent",
-  # Define the logState method in the methods list
-  methods = list(
-    update = function () {
-      callSuper()
-    },
-    initialize = function () {
-      callSuper()
-    },
-    logState = function () {
-      callSuper()
-      if (!is.xts(outputs)) {
+#' @examples NA
+openmi.om.logger <- R6Class(
+  'openmi.om.logger',
+  inherit = openmi.om.linkableComponent,
+  public = list(
+    #' @field directory where to store log file
+    directory = character(),
+    #' @field path to store log file includes directory and filename
+    path = character(),
+    #' @field filename name to store log file
+    filename = character(),
+    #' @field outputs local state variables to output
+    outputs = NA,
+    #' @description log data at end of timestep
+    #' @return NULL
+    logState = function() {
+      super$logState()
+      if (!is.xts(self$outputs)) {
         # first time, we need to initialize our data columns which includes timestamp
         # @todo: be more parsimonius?
-        outputs <<- xts(data.frame(data), order.by = as.POSIXct(data$thistime))
+        self$outputs <- xts(data.frame(self$data), order.by = as.POSIXct(self$data$thistime))
       } else {
-        outputs <<- rbind(outputs, xts(data.frame(data), order.by = as.POSIXct(data$thistime)))
+        self$outputs <- rbind(self$outputs, xts(data.frame(self$data), order.by = as.POSIXct(self$data$thistime)))
       }
     }
   )

@@ -1,19 +1,22 @@
 #' The base class for meta-model simulation control.
 #'
-#' @param
-#' @return reference class of type openmi.om.runtimeController
-#' @seealso
+#' @description Class providing a runnable model controller
+#' @details Will iterate through time steps from model timer start to end time, executing all child components
+#' @importFrom R6 R6Class
+#' @return R6 class of type openmi.om.runtimeController
+#' @seealso NA
 #' @export openmi.om.runtimeController
-#' @examples
-#' @include openmi.om.linkableComponent.R
+#' @examples NA
 openmi.om.runtimeController <- R6Class(
   "openmi.om.runtimeController",
-  inherit = openmi.om.base,
+  inherit = openmi.om.linkableComponent,
   public = list(
-    code = character,
+    #' @description create controller
+    #' @return R6 class
     initialize = function() {
       self$timer <- openmi.om.timer$new()
     },
+    #' @return boolean if model variables are sufficient to run
     checkRunVars = function() {
       if (!is.null(self$timer)) {
         if (is.null(self$timer$starttime)) {
@@ -31,6 +34,7 @@ openmi.om.runtimeController <- R6Class(
       }
       return(TRUE)
     },
+    #' @return NA
     run = function() {
       runok = self$checkRunVars()
       if (runok) {
@@ -43,11 +47,13 @@ openmi.om.runtimeController <- R6Class(
         print("Could not complete run.")
       }
     },
+    #' @return NA
     update = function() {
       super$update()
       # Update the timer afterwards
       self$timer$update()
     },
+    #' @return NA
     init = function() {
       super$init()
       self$timer$init()

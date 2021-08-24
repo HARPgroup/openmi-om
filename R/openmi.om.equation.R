@@ -2,27 +2,40 @@ library(stringr)
 library(httr)
 #' The base class for executable equation based meta-model components.
 #'
-#' @param
 #' @return reference class of type openmi.om.equation
 #' @seealso
 #' @export openmi.om.equation
-#' @examples
+#' @examples NA
 #' @include openmi.om.linkableComponent.R
 openmi.om.equation <- R6Class(
   "openmi.om.equation",
   inherit = openmi.om.linkableComponent,
   public = list(
+    #' @field equation the text based un-parsed equation
     equation = NA,
+    #' @field eq the ready to eval equation
     eq = NA,
+    #' @field defaultvalue value to set if null
     defaultvalue = NA,
+    #' @field minvalue minimum value to use if nonnegative = TRUE
     minvalue = NA,
+    #' @field nonnegative should result be constrained to positive only?
     nonnegative = NA,
+    #' @field numnull counter of occurences of null evaluation for debugging
     numnull = 0,
+    #' @field arithmetic_operators operators to allow in equations
     arithmetic_operators = NA,
+    #' @field safe_envir the set of values that are accessible to the equation during evaluation
     safe_envir = NA,
+    #' @description settable returns properties that can be set
+    #' @return array c() of object property names
     settable = function() {
       return(c('name', 'equation', 'defaultval', 'minvalue', 'nonnegative'))
     },
+    #' @description create new instance of equation object
+    #' @param elem_list list of attributes to set on object
+    #' @param format data format of elem_list
+    #' @return array c() of object property names
     initialize = function(elem_list = list(), format = 'raw'){
       #message("Creating equation")
       super$initialize(elem_list, format)
@@ -30,6 +43,8 @@ openmi.om.equation <- R6Class(
         get, self$get_operators()
       )
     },
+    #' @description get_operators returns list of valid functions
+    #' @return array c() of function names
     get_operators = function() {
       safe_f = c(
         "(", "+", "-", "/", "*", "^",
@@ -37,6 +52,10 @@ openmi.om.equation <- R6Class(
       )
       return(safe_f)
     },
+    #' @param propname which attribute
+    #' @param propvalue what value
+    #' @param format of propvalue
+    #' @return NA
     set_prop = function(propname, propvalue, format = 'raw') {
       super$set_prop(propname, propvalue, format)
       if (format == 'openmi') {
@@ -61,6 +80,8 @@ openmi.om.equation <- R6Class(
       }
       self$set_sub_prop(propname, propvalue, format)
     },
+    #' @description init parses equation and then passes on to parent class
+    #' @return NULL
     init = function() {
       super$init()
       if (length(self$defaultvalue) == 0) {
@@ -69,6 +90,8 @@ openmi.om.equation <- R6Class(
       self$value <- self$defaultvalue
       self$eq <- parse(text=self$equation)
     },
+    #' @description update executes the parsed equation, sets object value prop
+    #' @return NULL
     update = function() {
       super$update()
       #message("Evaluating eq")
@@ -82,6 +105,8 @@ openmi.om.equation <- R6Class(
       }
       self$data$value <- self$value
     },
+    #' @description evaluate is called by update, but can also b called if calling routine wants the value returned
+    #' @return value the result of the equation
     evaluate = function(){
       value <- tryCatch(
         {
