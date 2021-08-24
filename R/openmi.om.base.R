@@ -1,34 +1,58 @@
-#' The base object class for meta-model components.
+#' The base object class for meta-model components
 #'
-#' @param
-#' @return reference class of type openmi.om.base.
-#' @seealso
+#' @description Class providing the minimum attributes and methods for a model component
+#' @details Has standard methods for iterating through timesteps and connecting with other components
+#' @importFrom R6 R6Class
+#' @seealso NA
 #' @export openmi.om.base
-#' @examples
+#' @examples NA
 #' @include openmi.om.timer.R
+#' @return R6 class of type openmi.om.base
 openmi.om.base <- R6Class(
   'openmi.om.base',
   public = list(
+    #' @field name is a unique identifier for this controller
     name = NA,
+    #' @field code is a unique identifier for this controller
+    code = NA,
+    #' @field debug mode on/off
     debug = FALSE,
+    #' @field value at current instance
     value = NA,
-    data = NA, # data from the larger context, including the parent. was arData in om
-    state = NA, # this objects local state. was state in om
+    #' @field data from the larger context, including the parent. was arData in om
+    data = NA,
+    #' @field state this objects local state. was state in om
+    state = NA,
+    #' @field inputs linked to this object
     inputs = list(),
+    #' @field components contained by this object
     components = NA,
+    #' @field host name
     host = NA,
+    #' @field type of component
     type = NA,
+    #' @field compid is a unique identifier in this simulation domain
     compid = NA,
+    #' @field timer is the object keepign time in simulation (set by parent controller)
     timer = openmi.om.timer,
+    #' @field id is identifier (compid, name duplicates?)
     id = NA,
+    #' @param elem_list which properties to set on creation
+    #' @param format format of elem_list
+    #' @return R6 class object
     initialize = function(elem_list = list(), format = 'raw'){
       for (i in names(elem_list)) {
         self$set_prop(as.character(i), elem_list[[i]], format)
       }
     },
+    #' @return array of settable properties
     settable = function() {
       return(c('name', 'host'))
     },
+    #' @param propname which attribute
+    #' @param propvalue what value
+    #' @param format of propvalue
+    #' @return NA
     set_prop = function(propname, propvalue, format = 'raw') {
       if (format == 'openmi') {
         propvalue = self$parse_openmi(propvalue)
@@ -42,6 +66,8 @@ openmi.om.base <- R6Class(
       }
       self$set_sub_prop(propname, propvalue)
     },
+    #' @param propvalue openmi formatted property list
+    #' @return a settable data value from openmi json type data description
     parse_openmi = function(propvalue) {
       # check for special handlers needed
       # all openMI formatted will have a object_class and value field
@@ -63,11 +89,23 @@ openmi.om.base <- R6Class(
           propvalue <- as.character(propvalue[['value']])
         } else {
           # TBD: handle other types like data matrix in child classes
-          propvalue <- as.character(propvalue[['value']])
+          propvalue <- self$parse_class_specific(propvalue)
         }
       }
       return(propvalue)
     },
+    #' @param propvalue from some custom classformat reading implementation
+    #' @return a settable data value
+    parse_class_specific = function(propvalue) {
+      # special handlers for each class go here
+      propvalue <- as.character(propvalue[['value']])
+      return(propvalue)
+    },
+    #' @description set the value of a contained component (not a local class attribute)
+    #' @param propname which attribute
+    #' @param propvalue what value
+    #' @param format of propvalue
+    #' @return a settable data value
     set_sub_prop = function(propname, propvalue, format = 'raw') {
       if (!is.na(match(propname, names(self$components)))) {
         # pass to the component
@@ -75,6 +113,8 @@ openmi.om.base <- R6Class(
         obj$set_prop(propname, propvalue, format)
       }
     },
+    #' @description initialize this component after first object creation
+    #' @return NULL
     init = function(){
       if (length(self$debug) == 0) {
         self$debug <- FALSE
@@ -90,6 +130,8 @@ openmi.om.base <- R6Class(
         }
       }
     },
+    #' @description get all input values from linked components
+    #' @return NULL
     # added to base specification
     getInputs = function () {
       # get data from related objects or internal timeseries feeds
@@ -129,10 +171,14 @@ openmi.om.base <- R6Class(
         }
       }
     },
+    #' @description execute things to do before model timestep execution
+    #' @return NULL
     prepare = function(){
       # preStep() in OM php
       self$getInputs()
     },
+    #' @description execute model timestep code
+    #' @return NULL
     update = function(){
       # step() in OM php
       self$prepare()
@@ -147,6 +193,8 @@ openmi.om.base <- R6Class(
       self$finish()
       self$logState()
     },
+    #' @description do things at end of model step
+    #' @return NULL
     finish = function(){
       # postStep() in OM php
       if (!is.na(self$components)) {
@@ -157,17 +205,34 @@ openmi.om.base <- R6Class(
         }
       }
     },
+    #' @description Is this object valid?
+    #' @return logical TRUE/FALSE
     validate = function(){
 
     },
+    #' @description log data at end of timestep
+    #' @return NULL
     logState = function () {
       # logState() in OM php
 
     },
+    #' @description get value of this object currently
+    #' @param name a specific name from the state array, not just the default. TBD
+    #' @return value
     getValue = function(name = "value"){
-      # returns the value.  Defaults to simple case where object only has one possible value
+      # Check data array first
+      if (name %in% names(self$data)) {
+        return(self$data[name])
+      }
+      # Defaults to simple case where object only has one possible value
       return(self$value)
     },
+    #' @description connect an input to this component
+    #' @param local_name name that will be referred to in local contest
+    #' @param object is the actual R6 class to connect to
+    #' @param remote_name is what property on the remote object are we accessing
+    #' @param input_type is this is a number (most common), text or other?
+    #' @return value
     addInput = function(
       local_name = character(),
       object = openmi.om.base,
@@ -191,16 +256,22 @@ openmi.om.base <- R6Class(
         )
       )
     },
+    #' @description add a contained sub-component (i.e. not linked)
+    #' @param thiscomp an R6 classof open.mi type
+    #' @return value
     addComponent = function (thiscomp = openmi.om.base) {
       # this is deprecated in favor of the naming convention _
       return(self$add_component(thiscomp))
     },
-    # components are small objects that reside inside this object
+    #' @description add a contained sub-component (i.e. not linked)
+    #' @param thiscomp an R6 classof open.mi type
+    #' @details components are small objects that reside inside this object
     # these *were* called processors in the old version of the model
     # other models are handled exclusively by the runtime controller/container
     # and they *may be* known as model_entities -- or they may *also*
     # be known as components: is there any reason
     # to have a separate concept of components and sub_components? run hierarchy?
+    #' @return NULL
     add_component = function (thiscomp = openmi.om.base) {
       compid = self$get_component_id(thiscomp)
       message(paste("Created compid =", compid))
@@ -211,6 +282,9 @@ openmi.om.base <- R6Class(
       }
       self$components[compid] <- list('object' = thiscomp)
     },
+    #' @description return unique ID of component
+    #' @param thiscomp an R6 classof open.mi type
+    #' @return integer
     get_component_id = function(thiscomp) {
 
       # we can add this with numeric indices if we like
@@ -245,9 +319,13 @@ openmi.om.base <- R6Class(
       thiscomp$compid = paste(thiscomp$name, thiscomp$host,thiscomp$type,thiscomp$id, sep=":")
       return(thiscomp)
     },
+    #' @description order contained sub-components
+    #' @return NULL
     orderOperations = function () {
       # sets basic hierarchy of execution by re-ordering the components list
     },
+    #' @description format this object as openmi json
+    #' @return json text
     asJSON = function () {
       #TBD
     }
