@@ -43,6 +43,8 @@ NA
 
 \item{\code{compid}}{is a unique identifier in this simulation domain}
 
+\item{\code{vars}}{is an array of variables that this requires for solving, determines op order}
+
 \item{\code{timer}}{is the object keepign time in simulation (set by parent controller)}
 
 \item{\code{id}}{is identifier (compid, name duplicates?)}
@@ -59,6 +61,7 @@ NA
 \item \href{#method-parse_class_specific}{\code{openmi.om.base$parse_class_specific()}}
 \item \href{#method-set_sub_prop}{\code{openmi.om.base$set_sub_prop()}}
 \item \href{#method-init}{\code{openmi.om.base$init()}}
+\item \href{#method-set_vars}{\code{openmi.om.base$set_vars()}}
 \item \href{#method-getInputs}{\code{openmi.om.base$getInputs()}}
 \item \href{#method-prepare}{\code{openmi.om.base$prepare()}}
 \item \href{#method-update}{\code{openmi.om.base$update()}}
@@ -200,6 +203,19 @@ a settable data value
 initialize this component after first object creation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$init()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_vars"></a>}}
+\if{latex}{\out{\hypertarget{method-set_vars}{}}}
+\subsection{Method \code{set_vars()}}{
+set_vars finds all the input var names for this function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$set_vars()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

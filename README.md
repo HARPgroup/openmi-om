@@ -4,7 +4,11 @@ A lightweight implementation of the OpenMI framework for building Object-oriente
 INSTALLATION
 Currently installation is from tar.gz only.  Use the following command:
 ```
+# last working:
 install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9106.tar.gz', repos = NULL, type="source")
+# Now try
+library("devtools")
+install_github("HARPgroup/openmi-om")
 ```
 
 BUILDING

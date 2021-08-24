@@ -5,6 +5,7 @@ library("hydrotools")
 library("openmi.om")
 
 source("https://raw.githubusercontent.com/HARPgroup/hydro-tools/master/VAHydro-2.0/find_name.R")
+basepath = "/var/www/R"
 source("/var/www/R/config.R")
 # Create datasource
 ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
@@ -15,14 +16,19 @@ load_txt <- ds$auth_read(src_json_node, "text/json", "")
 load_objects <- fromJSON(load_txt)
 model <- load_objects[[model_prop$propname]]
 
+# Now, just test with a single
 # load the open mi data format
 pump_cfs_od <- model$pump_cfs
 # create an equation from this, TBD: move to loader function on object
 pump_cfs <- openmi_om_load(pump_cfs_od);
+# testing we need to do a little more manually
+pump_cfs <- openmi.om.equation$new(pump_cfs_od, 'openmi')
+pump_cfs$init()
+pump_cfs$vars
 
-# TBD - translate from PHP, and also restructure to be more modular and readable 
+# TBD - translate from PHP, and also restructure to be more modular and readable
 function orderOperations() {
-  
+
   $dependents = array();
   $independents = array();
   $sub_queue = array();
@@ -100,7 +106,7 @@ function orderOperations() {
       if ($this->debug) {
         $this->logDebug("Not found, adding $thisdepend to execlist.<br>\n");
       }
-      // remove it from the derived var list if it exists there 
+      // remove it from the derived var list if it exists there
       while ($dkey = array_search($thisdepend, $independents)) {
         unset($independents[$dkey]);
       }
@@ -123,7 +129,7 @@ function orderOperations() {
       # themselves, but may depend on the output of objects that are in a circle
       # then, if we add the circular variables to the queue, we may be able to continue
       # trying to order the remaining variables
-      
+
       # first, create a list of execution hierarchies and compids
       $hierarchy = array();
       foreach ($queue as $thisel) {
@@ -154,7 +160,7 @@ function orderOperations() {
         }
         $queue = $newqueue;
       } else {
-        
+
         if ($this->debug) {
           $this->logDebug("Can not determine linear sequence for the remaining variables. <br>\n");
           $this->logDebug($queue);
@@ -180,8 +186,8 @@ function orderOperations() {
   }
   $this->debug = $dbc;
   $hiersort = array_merge($preexec, $execlist, $postexec);
-  
-  
+
+
   $this->logDebug("Final Queue \n");
   $this->logDebug($queue);
   $this->logDebug("Final independents \n");
@@ -192,7 +198,7 @@ function orderOperations() {
   $this->logDebug($hiersort);
   $this->logDebug("Post-exec list:  \n");
   $this->logDebug($postexec);
-  
+
   $this->outstring .= "Ordering Operations\n";
   $this->outstring .= "Independents Remaining: " . print_r($independents,1) . "\n";
   $this->outstring .= "Pre-exec list: " . print_r($preexec,1) . "\n";
