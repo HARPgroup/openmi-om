@@ -17,7 +17,8 @@ load_objects <- fromJSON(load_txt)
 model_json <- load_objects[[model_prop$propname]]
 model <-  openmi_om_load(model_json)
 model$init()
-model$pump_cfs$vars
+model$components$pump_cfs$vars
+model$components$pump_allowed$vars
 
 # Now, just test with a single
 # load the open mi data format

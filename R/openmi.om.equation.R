@@ -104,7 +104,9 @@ openmi.om.equation <- R6Class(
       for (i in 1:nrow(plist)) {
         pdi <- plist[i,]
         if (str_to_lower(pdi$token) == 'symbol') {
-          self$vars <- rbind(self$vars, pdi$text)
+          if (is.na(match(pdi$text, self$vars))) {
+            self$vars <- rbind(self$vars, pdi$text)
+          }
         }
       }
     },
