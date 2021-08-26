@@ -19,6 +19,8 @@ model <-  openmi_om_load(model_json)
 model$init()
 model$components$pump_cfs$vars
 model$components$pump_allowed$vars
+model$components$refill_full$vars
+model$components$refill_full$state
 
 # Now, just test with a single
 # load the open mi data format
