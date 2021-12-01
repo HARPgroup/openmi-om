@@ -17,6 +17,7 @@ Collate:
     'openmi.om.timer.R'
     'openmi.om.base.R'
     'openmi.om.linkableComponent.R'
+    'openmi.om.channelObject.R'
     'openmi.om.equation.R'
     'openmi.om.logger.R'
     'openmi.om.matrix.R'

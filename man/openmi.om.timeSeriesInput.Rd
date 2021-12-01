@@ -53,6 +53,7 @@ NA
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="get_component_id">}\href{../../openmi.om/html/openmi.om.base.html#method-get_component_id}{\code{openmi.om::openmi.om.base$get_component_id()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="initialize">}\href{../../openmi.om/html/openmi.om.base.html#method-initialize}{\code{openmi.om::openmi.om.base$initialize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="logState">}\href{../../openmi.om/html/openmi.om.base.html#method-logState}{\code{openmi.om::openmi.om.base$logState()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="log_debug">}\href{../../openmi.om/html/openmi.om.base.html#method-log_debug}{\code{openmi.om::openmi.om.base$log_debug()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="orderOperations">}\href{../../openmi.om/html/openmi.om.base.html#method-orderOperations}{\code{openmi.om::openmi.om.base$orderOperations()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="parse_class_specific">}\href{../../openmi.om/html/openmi.om.base.html#method-parse_class_specific}{\code{openmi.om::openmi.om.base$parse_class_specific()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="parse_openmi">}\href{../../openmi.om/html/openmi.om.base.html#method-parse_openmi}{\code{openmi.om::openmi.om.base$parse_openmi()}}\out{</span>}
@@ -61,6 +62,7 @@ NA
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_sub_prop">}\href{../../openmi.om/html/openmi.om.base.html#method-set_sub_prop}{\code{openmi.om::openmi.om.base$set_sub_prop()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_vars">}\href{../../openmi.om/html/openmi.om.base.html#method-set_vars}{\code{openmi.om::openmi.om.base$set_vars()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="settable">}\href{../../openmi.om/html/openmi.om.base.html#method-settable}{\code{openmi.om::openmi.om.base$settable()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="step">}\href{../../openmi.om/html/openmi.om.base.html#method-step}{\code{openmi.om::openmi.om.base$step()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="update">}\href{../../openmi.om/html/openmi.om.base.html#method-update}{\code{openmi.om::openmi.om.base$update()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="validate">}\href{../../openmi.om/html/openmi.om.base.html#method-validate}{\code{openmi.om::openmi.om.base$validate()}}\out{</span>}
 }

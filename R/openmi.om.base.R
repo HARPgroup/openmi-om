@@ -144,6 +144,7 @@ openmi.om.base <- R6Class(
       self$vars <- c()
     },
     #' @description log_debug handles debug info
+    #' @param debug_mesg message to add to logger
     #' @return NULL
     log_debug = function(debug_mesg) {
       # TBD
