@@ -143,6 +143,12 @@ openmi.om.base <- R6Class(
       #      maybe this is better handled separately since there are object refs tied to inputs?
       self$vars <- c()
     },
+    #' @description log_debug handles debug info
+    #' @param debug_mesg message to add to logger
+    #' @return NULL
+    log_debug = function(debug_mesg) {
+      # TBD
+    },
     #' @description get all input values from linked components
     #' @return NULL
     # added to base specification
@@ -190,11 +196,19 @@ openmi.om.base <- R6Class(
       # preStep() in OM php
       self$getInputs()
     },
+    #' @description perform model timestep execution
+    #' @return NULL
+    step = function(){
+      # prepare = preStep() in OM php
+      self$prepare()
+      self$update()
+      self$finish()
+      self$logState()
+    },
     #' @description execute model timestep code
     #' @return NULL
     update = function(){
-      # step() in OM php
-      self$prepare()
+      # evaluate() in OM php
       if (!is.na(self$components)) {
         for (i in 1:length(self$components)) {
           #message(paste("Calling update() on ", i))
@@ -203,8 +217,6 @@ openmi.om.base <- R6Class(
       } else {
         #message(paste("components on object", self$name, "is.na"))
       }
-      self$finish()
-      self$logState()
     },
     #' @description do things at end of model step
     #' @return NULL

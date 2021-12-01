@@ -8,10 +8,12 @@ source("https://raw.githubusercontent.com/HARPgroup/hydro-tools/master/VAHydro-2
 basepath = "/var/www/R"
 source("/var/www/R/config.R")
 # Create datasource
-ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
+drupalsite = "http://deq1.bse.vt.edu:81/d.alpha"
+
+ds <- RomDataSource$new(drupalsite, 'restws_admin')
 ds$get_token(rest_pw)
 model_prop <- RomProperty$new(ds,list(featureid = 71807, entity_type = 'dh_feature', propcode = 'vwp-1.0'), TRUE)
-src_json_node <- paste('https://deq1.bse.vt.edu/d.dh/node/62', model_prop$pid, sep="/")
+src_json_node <- paste(drupalsite, "node/62", model_prop$pid, sep="/")
 load_txt <- ds$auth_read(src_json_node, "text/json", "")
 load_objects <- fromJSON(load_txt)
 model_json <- load_objects[[model_prop$propname]]

@@ -62,8 +62,10 @@ NA
 \item \href{#method-set_sub_prop}{\code{openmi.om.base$set_sub_prop()}}
 \item \href{#method-init}{\code{openmi.om.base$init()}}
 \item \href{#method-set_vars}{\code{openmi.om.base$set_vars()}}
+\item \href{#method-log_debug}{\code{openmi.om.base$log_debug()}}
 \item \href{#method-getInputs}{\code{openmi.om.base$getInputs()}}
 \item \href{#method-prepare}{\code{openmi.om.base$prepare()}}
+\item \href{#method-step}{\code{openmi.om.base$step()}}
 \item \href{#method-update}{\code{openmi.om.base$update()}}
 \item \href{#method-finish}{\code{openmi.om.base$finish()}}
 \item \href{#method-validate}{\code{openmi.om.base$validate()}}
@@ -223,6 +225,19 @@ NULL
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_debug"></a>}}
+\if{latex}{\out{\hypertarget{method-log_debug}{}}}
+\subsection{Method \code{log_debug()}}{
+log_debug handles debug info
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$log_debug(debug_mesg)}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getInputs"></a>}}
 \if{latex}{\out{\hypertarget{method-getInputs}{}}}
 \subsection{Method \code{getInputs()}}{
@@ -242,6 +257,19 @@ NULL
 execute things to do before model timestep execution
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$prepare()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-step"></a>}}
+\if{latex}{\out{\hypertarget{method-step}{}}}
+\subsection{Method \code{step()}}{
+perform model timestep execution
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$step()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
