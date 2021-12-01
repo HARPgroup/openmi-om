@@ -10,7 +10,11 @@ source("/var/www/R/config.R")
 # Create datasource
 ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
 ds$get_token(rest_pw)
-model_prop <- RomProperty$new(ds,list(featureid = 68128, entity_type = 'dh_feature', propcode = 'vahydro-1.0'), TRUE)
+
+# feature hydroid
+hydroid <- 475973
+
+model_prop <- RomProperty$new(ds,list(featureid = hydroid, entity_type = 'dh_feature', propcode = 'vahydro-1.0'), TRUE)
 src_json_node <- paste('https://deq1.bse.vt.edu/d.dh/node/62', model_prop$pid, sep="/")
 load_txt <- ds$auth_read(src_json_node, "text/json", "")
 load_objects <- fromJSON(load_txt)
@@ -53,4 +57,4 @@ om.trace.vars <- function (
 compnames <- names(model$components)
 finished <- FALSE
 i <- "wd_mgd"
-om.trace.vars(model, i)
+om.trace.vars(model, "Qintake")
