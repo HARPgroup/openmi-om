@@ -8,7 +8,7 @@ source("https://raw.githubusercontent.com/HARPgroup/hydro-tools/master/VAHydro-2
 basepath = "/var/www/R"
 source("/var/www/R/config.R")
 # Create datasource
-ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
+ds <- RomDataSource$new("http://deq1.bse.vt.edu/d.dh", 'restws_admin')
 ds$get_token(rest_pw)
 
 # feature hydroid

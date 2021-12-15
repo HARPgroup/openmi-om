@@ -233,6 +233,13 @@ log_debug handles debug info
 \if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$log_debug(debug_mesg)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{debug_mesg}}{message to add to logger}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 NULL
 }
