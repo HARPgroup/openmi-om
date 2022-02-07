@@ -201,22 +201,28 @@ openmi.om.base <- R6Class(
     step = function(){
       # prepare = preStep() in OM php
       self$prepare()
+      self$stepChildren()
       self$update()
       self$finish()
       self$logState()
+    },
+    #' @description execute child model timestep code
+    #' @return NULL
+    stepChildren = function(){
+      # evaluate() in OM php
+      if (!is.na(self$components)) {
+        for (i in 1:length(self$components)) {
+          #message(paste("Calling update() on ", i))
+          self$components[[i]]$step()
+        }
+      } else {
+        #message(paste("components on object", self$name, "is.na"))
+      }
     },
     #' @description execute model timestep code
     #' @return NULL
     update = function(){
       # evaluate() in OM php
-      if (!is.na(self$components)) {
-        for (i in 1:length(self$components)) {
-          #message(paste("Calling update() on ", i))
-          self$components[[i]]$update()
-        }
-      } else {
-        #message(paste("components on object", self$name, "is.na"))
-      }
     },
     #' @description do things at end of model step
     #' @return NULL
