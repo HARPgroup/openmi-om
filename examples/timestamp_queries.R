@@ -22,13 +22,18 @@ beg<- as.POSIXct( format(min(index(dat_smd)), "%Y-%m-%d %H:%M", tz="EST5EDT"))
 bend<- as.POSIXct( format(max(index(dat_smd)), "%Y-%m-%d %H:%M", tz="EST5EDT"))
 dat_smd <- as.data.frame(dat_smd)
 ts = 12*60*60
-tseq <- seq(as.integer(beg), as.integer(bend), by=ts)
-
-tbase <-  as.data.frame(tseq)
+#*************************************************
+# tbase would be produced by the timer object
+# and shared with all children that wish to produce a
+# matching timeseries
+tbase <- seq(as.integer(beg), as.integer(bend), by=ts)
+tbase <-  as.data.frame(tbase)
 names(tbase) <- c('timestamp')
+#*************************************************
 
 
 # all at the same time, which can take forever
+# keep this just for time comparison
 tsmatrix <- sqldf(
   "
   select a.timestamp as t_start, a.timestamp + $ts as t_end,
@@ -57,6 +62,8 @@ tsmatrix <- sqldf(
 
 # one at a time
 
+#*************************************************
+# matrix 1 captures all events between the given index timestamp
 tsmatrix1 <- sqldf(
   "
   select a.timestamp as t_start, a.timestamp + $ts as t_end,
@@ -71,7 +78,11 @@ tsmatrix1 <- sqldf(
   group by a.timestamp
   "
 )
+#*************************************************
 
+
+#*************************************************
+# matrix 2 captures the previous outer timestamp
 tsmatrix2 <- sqldf(
   "
   select a.t_start, a.t_end,
@@ -86,7 +97,11 @@ tsmatrix2 <- sqldf(
   group by a.t_start
   "
 )
+#*************************************************
 
+
+#*************************************************
+# matrix 3 captures the next outer timestamp
 tsmatrix3 <- sqldf(
   "
   select a.t_start, a.t_end,
@@ -102,6 +117,7 @@ tsmatrix3 <- sqldf(
   group by a.t_start
   "
 )
+#*************************************************
 
 dat_smd_Q <- sqldf("select timestamp, Qlocal from dat_smd")
 
@@ -123,16 +139,29 @@ tsvalues_in <- sqldf(
   "
 )
 
+# how to interpolate when the distance between prev and next is not uniform?
+# we need to know starting and ending values, which could be accomplished
+# by joining the value table twice, once to prev ts and once to next ts
 tsvalues_out <- sqldf(
   "select a.t_start, a.t_end,
       a.previous_outer, a.next_outer,
-      avg(b.Qlocal) as outer_mean,
-    count(b.Qlocal) as outer_count
-    from tsvalues as a
+      (b.Qlocal + c.Qlocal) / 2.0 as outer_mean,
+      count(b.Qlocal) as outer_count,
+      (a.next_outer - a.t_start )
+        / (a.next_outer - a.previous_outer) as int_frac,
+      b.Qlocal + (
+        (c.Qlocal - b.Qlocal) *
+        (a.next_outer - a.t_start )
+        / (a.next_outer - a.previous_outer)
+      ) as int_value
+    from tsvalues_in as a
     left outer join dat_smd as b
     on (
       a.previous_outer = b.timestamp
-      OR a.next_outer = b.timestamp
+    )
+    left outer join dat_smd as c
+    on (
+      a.next_outer = c.timestamp
     )
     where a.inner_count = 0
     group by a.t_start, a.t_end, a.first_inner, a.last_inner,
@@ -140,10 +169,15 @@ tsvalues_out <- sqldf(
   "
 )
 
+# join the final result together, using inner when available
+# and outer interpolation when not
+# @todo:
+#  - allow prev, next value for outer
+#  - allow min, max, median for inner
 tsvalues <- sqldf(
   "select a.t_start as timestamp,
      CASE
-       WHEN a.inner_count = 0 THEN b.outer_mean
+       WHEN a.inner_count = 0 THEN b.int_value
        ELSE a.inner_mean
      END as tsvalue
    from tsvalues_in as a
@@ -151,8 +185,11 @@ tsvalues <- sqldf(
    on (
      a.t_start = b.t_start
    )
+   order by a.t_start
   "
 )
+
+index(tsvalues) <- tsvalues$timestamp
 # timestamps: first_inner, last_inner, first_outer, last_outer
 # now, we do summaries
 # if first_inner is and last_inner are non-null
