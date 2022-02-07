@@ -37,13 +37,13 @@ ts.stack <- setRefClass(
 # BEGIN Model
 #****************************
 # instantiate a version of model container: openmi.om.runtimeController
-m <- openmi.om.runtimeController();
+m <- openmi.om.runtimeController$new();
 
 #****************************
 # Add Basic Equations
 #****************************
 # now create an instance of the verboseEquation class we've just made
-k <- openmi.om.timeSeriesInput();
+k <- openmi.om.timeSeriesInput$new();
 # Create dat by reading tmp_file
 #tmp_file <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1127/datasets/tmp_file.csv"
 tmp_file = "http://deq2.bse.vt.edu/files/icprb/potomac_111518_precip_in.tsv"

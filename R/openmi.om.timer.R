@@ -50,6 +50,7 @@ openmi.om.timer <- R6Class(
       if (length(self$dt) == 0) {
         self$dt <- 86400
       }
+      self$thistime <- self$starttime
       self$mo <- as.integer(format(self$thistime,'%m'))
       self$da <- as.integer(format(self$thistime,'%d'))
       self$yr <- as.integer(format(self$thistime,'%Y'))
