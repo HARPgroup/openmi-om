@@ -40,7 +40,7 @@ openmi.om.runtimeController <- R6Class(
       if (runok) {
         while (self$timer$status != 'finished') {
           print(paste("Model update() @", self$timer$thistime,sep=""))
-          self$update()
+          self$step()
         }
         print("Run completed.")
       } else {

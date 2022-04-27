@@ -54,6 +54,7 @@ NA
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="set_vars">}\href{../../openmi.om/html/openmi.om.base.html#method-set_vars}{\code{openmi.om::openmi.om.base$set_vars()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="settable">}\href{../../openmi.om/html/openmi.om.base.html#method-settable}{\code{openmi.om::openmi.om.base$settable()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="step">}\href{../../openmi.om/html/openmi.om.base.html#method-step}{\code{openmi.om::openmi.om.base$step()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="stepChildren">}\href{../../openmi.om/html/openmi.om.base.html#method-stepChildren}{\code{openmi.om::openmi.om.base$stepChildren()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="openmi.om" data-topic="openmi.om.base" data-id="validate">}\href{../../openmi.om/html/openmi.om.base.html#method-validate}{\code{openmi.om::openmi.om.base$validate()}}\out{</span>}
 }
 \out{</details>}

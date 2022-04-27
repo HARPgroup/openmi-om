@@ -66,6 +66,7 @@ NA
 \item \href{#method-getInputs}{\code{openmi.om.base$getInputs()}}
 \item \href{#method-prepare}{\code{openmi.om.base$prepare()}}
 \item \href{#method-step}{\code{openmi.om.base$step()}}
+\item \href{#method-stepChildren}{\code{openmi.om.base$stepChildren()}}
 \item \href{#method-update}{\code{openmi.om.base$update()}}
 \item \href{#method-finish}{\code{openmi.om.base$finish()}}
 \item \href{#method-validate}{\code{openmi.om.base$validate()}}
@@ -277,6 +278,19 @@ NULL
 perform model timestep execution
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$step()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stepChildren"></a>}}
+\if{latex}{\out{\hypertarget{method-stepChildren}{}}}
+\subsection{Method \code{stepChildren()}}{
+execute child model timestep code
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openmi.om.base$stepChildren()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
