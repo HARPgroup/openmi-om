@@ -40,7 +40,20 @@ openmi.om.timeSeriesInput <- R6Class(
       # get the current time slice
       # may use span i.e. tvals = tsvalues[paste(timer$lasttime, timer$thistime, sep=":")]
       # must then apply function if it results in multiple values
+
+      # interp and extrap settings tell us
+      # how to handle missing or multiple values?
       tvals = self$tsvalues[self$timer$thistime]
+      if (nrow(tvals) == 0) {
+        # options:
+        # - use a previous value (currently only option)
+        return()
+        # - do a fn (mean) of prev & next value
+        # - use next value
+        # - return null
+        # also, this can be handled in the previous
+      }
+
       # this should move to init() ??
       if (is.na(self$tscols)) {
         self$set_names()

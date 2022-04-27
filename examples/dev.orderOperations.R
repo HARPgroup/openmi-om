@@ -16,6 +16,10 @@ model_prop <- RomProperty$new(ds,list(featureid = 71807, entity_type = 'dh_featu
 src_json_node <- paste(drupalsite, "node/62", model_prop$pid, sep="/")
 load_txt <- ds$auth_read(src_json_node, "text/json", "")
 load_objects <- fromJSON(load_txt)
+# the objec comes in encapsulated inside of a single json
+# object with the name of the object.  This is funky and we may
+# consider removing this, since it presupposes that the
+# client knows the name of the object before parsing the object.
 model_json <- load_objects[[model_prop$propname]]
 model <-  openmi_om_load(model_json)
 model$init()

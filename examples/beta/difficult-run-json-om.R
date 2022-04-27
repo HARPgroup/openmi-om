@@ -13,28 +13,7 @@ ds$get_token()
 #****************************
 # Import JSON Objects
 #****************************
-src_json <- 'https://raw.githubusercontent.com/HARPgroup/vahydro/master/data/vahydro-1.0/YP2_6390_6330.json'
-# From vahydro
-# src_json <- 'http://deq1.bse.vt.edu/d.dh/dh-properties-openmi-json/5031577'
-# src_json <- 'http://deq2.bse.vt.edu/d.dh/dh-properties-openmi-json/5031577'
-# this *almost* works:
-#  src_json_view <- 'https://deq1.bse.vt.edu/d.dh/openmi-om-export-json/5031577'
-#  load_txt <- ds$auth_read(src_json_view, "text/json", "")
-  # the trouble is that between these two lines we have to manually edit
-  # and remove "[]" from the header, and "--------------" from the footer
-#  writeLines(as.character(load_txt),'C:/Workspace/tmp/tst_json.txt')
-#  load_objects <- fromJSON(file='C:/Workspace/tmp/tst_json.txt')
-  #load_objects <- fromJSON(capture.output(writeLines(as.character(load_txt))))
-
-# this works just fine and should be the basis
-  src_json_node <- 'https://deq1.bse.vt.edu/d.dh/node/62/4825081'
-  src_json_node <- 'https://deq1.bse.vt.edu/d.dh/node/62/5031577'
-  load_txt <- ds$auth_read(src_json_node, "text/json", "")
-  load_objects <- fromJSON(load_txt)
-  #load_objects <- fromJSON(capture.output(writeLines(as.character(load_txt))))
-
-
-
+src_json <- 'https://raw.githubusercontent.com/HARPgroup/om/master/data/json/difficult_run.json'
 load_objects <- fromJSON(file = src_json)
 
 
