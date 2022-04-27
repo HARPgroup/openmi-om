@@ -8,7 +8,7 @@ library("openmi.om")
 
 # Load Libraries
 basepath='/var/www/R';
-site <- "http://deq2.bse.vt.edu/d.dh"    #Specify the site of interest, either d.bet OR d.dh
+site <- "http://deq1.bse.vt.edu/d.dh:81"    #Specify the site of interest, either d.bet OR d.dh
 source("/var/www/R/config.local.private");
 source(paste(basepath,'config.R',sep='/'))
 
@@ -64,7 +64,7 @@ tsmatrix <- sqldf(
 
 #*************************************************
 # matrix 1 captures all events between the given index timestamp
-tsmatrix1 <- sqldf(
+tsmatrix1 <- fn$sqldf(
   "
   select a.timestamp as t_start, a.timestamp + $ts as t_end,
     min(b.timestamp) as first_inner,
