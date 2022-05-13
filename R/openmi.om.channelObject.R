@@ -57,11 +57,13 @@ openmi.om.channelObject <- R6Class(
     update = function() {
       super$update() # this executes all the subcomps and processors
       #message("Evaluating eq")
-      self$evaluate()
+      # this is disabled until we can get supporting methods coded
+      #self$route()
     },
-    #' @description evaluate is called by update, but can also be called if calling routine wants the value returned
+    #' @description route is called by update, but can also be called if calling routine wants the value returned
     #' @return value the result of the equation
-    evaluate = function() {
+    route = function() {
+      # this is disabled until we can get supporting methods coded
       # solve the channel routing equation
       area = self$state['area'];
       Qafps = self$state['Qafps'];

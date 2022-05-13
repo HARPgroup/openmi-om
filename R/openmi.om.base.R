@@ -22,7 +22,7 @@ openmi.om.base <- R6Class(
     #' @field data from the larger context, including the parent. was arData in om
     data = NA,
     #' @field state this objects local state. was state in om
-    state = NA,
+    state = list(),
     #' @field inputs linked to this object
     inputs = list(),
     #' @field components contained by this object
