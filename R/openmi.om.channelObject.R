@@ -23,7 +23,7 @@ openmi.om.channelObject <- R6Class(
     n = 1.0,
     #' @field substrateclass substrate class (USGS hab model aram, A, B, C, D)
     substrateclass = 'C',
-    #' @field channeltype channel shape (only trapezoidal channels, type=2 are currently supported)
+    #' @field channeltype channel shape (1=rect, 2=trapezoidal channels, type=1,2 are currently supported
     channeltype = 2,
     #' @field storageinitialized is the storage initialized on first exec?
     storageinitialized = 0,

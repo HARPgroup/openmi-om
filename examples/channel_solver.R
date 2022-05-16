@@ -58,14 +58,67 @@ channel_model$addComponent(ftable_matrix)
 # Storage
 channel_storage <- openmi.om.equation$new()
 channel_storage$addInput()
-channel_storage$equation <- "as.numeric(approx(ftable_matrix$datamatrix[,"VOLUME"],ftable_matrix$datamatrix[,"DISCH"],50000)$y)"
+channel_storage$equation <- "as.numeric(approx(ftable_matrix$datamatrix[,\"VOLUME\"],ftable_matrix$datamatrix[,\"DISCH\"],50000)$y)"
 
 
-channel_model2 <- openmi.om.channelObjectSimple$new()
-channel_model2$length <- 30000
-channel_model2$Z <- 1.0
-channel_model2$base <- 25.0
-channel_model2$n <- 0.05
+# susquehana
+# Trapezoid
+channel_model_trap <- openmi.om.channelObjectSimple$new()
+channel_model_rect$channeltype <- 2
+channel_model_trap$length <- 68851.2
+channel_model_trap$Z <- 1.0
+channel_model_trap$base <- 850
+channel_model_trap$n <- 0.095
+channel_model_trap$slope <- 0.000262014
+S_mean <- channel_model_trap$SfQ_lim(800*10^6, 15200.0, 14000.0, 86400)
+Qave_1 <- channel_model_trap$QfS(S_mean)$Q
+S_1 <- S_0 + (Qave_1 - Qin_1) * dt
 
-channel_model2$SfQest(100.0, 86400)
-channel_model2$QfS(4320000)
+
+channel_model_trap$QfS(53900.0*43559.9)
+
+# below yields approx 16,000 cfs for volume of 800 million cuft
+channel_model_trap$QfS(800*10^6)$Q
+channel_model_trap$QfS(800*10^6)$V
+channel_model_trap$QfS(800*10^6)$A
+channel_model_trap$QfS(800*10^6)$d
+
+# Rectangle
+channel_model_rect <- openmi.om.channelObjectSimple$new()
+channel_model_rect$channeltype <- 1
+channel_model_rect$length <- 68851.2
+channel_model_rect$Z <- 1.0
+channel_model_rect$base <- 850
+channel_model_rect$n <- 0.68
+channel_model_rect$slope <- 0.000262014
+channel_model_rect$SfQ_lim(800*10^6, 15200.0, 14000.0, 86400)
+S1 <- channel_model_rect$SfQ_rect_euler(800*10^6, 14000.0, 86400)
+channel_model_rect$QfS(S1)
+
+channel_model_trap$QfS(800*10^6)$Q
+channel_model_trap$QfS(800*10^6)$V
+channel_model_trap$QfS(800*10^6)$A
+channel_model_trap$QfS(800*10^6)$d
+
+
+
+# OM model
+# Flatlick Branch
+# runoff element 353071
+# Watershed element 353061
+# run 201 = 1988-2002
+# run 1141 = 1984-2020
+fbdat <- om_get_rundata(353061 , 201, site=omsite)
+quantile(fbdat$local_channel_its)
+Z =	2.1267929833197
+drainage_area = 4.22
+base = 12.40505107886
+length = 14256
+n = 0.095
+slope = 0.007
+
+
+# OM model with timestep trouble
+mlelid = 340286
+mldat <- om_get_rundata(mlelid, 201, site=omsite)
+
