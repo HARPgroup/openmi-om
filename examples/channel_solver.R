@@ -104,11 +104,12 @@ channel_model_trap$QfS(800*10^6)$d
 
 # OM model
 # Flatlick Branch
-# runoff element 353071
+# runoff element container 353071
+# cbp6 landseg 353069
 # Watershed element 353061
 # run 201 = 1988-2002
 # run 1141 = 1984-2020
-fbdat <- om_get_rundata(353061 , 201, site=omsite)
+fbdat <- om_get_rundata(353061 , 1141, site=omsite)
 quantile(fbdat$local_channel_its)
 Z =	2.1267929833197
 drainage_area = 4.22
