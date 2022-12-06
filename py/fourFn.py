@@ -170,7 +170,6 @@ def evaluate_stack(s):
         except ValueError:
             return float(op)
 
-
 def pre_evaluate_stack(s, ps):
     op, num_args = s.pop(), 0
     if isinstance(op, tuple):
@@ -203,11 +202,8 @@ def pre_evaluate_stack(s, ps):
     elif op[0].isalpha():
         return op
     else:
-        # try to evaluate as float else do as string
-        try:
-            return int(op)
-        except ValueError:
-            return op
+        # return the operand now
+        return op
 
 
 from numba import njit 
