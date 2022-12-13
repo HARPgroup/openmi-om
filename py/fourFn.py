@@ -29,11 +29,11 @@ import operator
 exprStack = []
 
 
-def push_first(toks):
+def push_first(toks, exprStack):
     exprStack.append(toks[0])
 
 
-def push_unary_minus(toks):
+def push_unary_minus(toks, exprStack):
     for t in toks:
         if t == "-":
             exprStack.append("unary -")
