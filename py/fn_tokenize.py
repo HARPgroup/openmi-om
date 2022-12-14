@@ -15,8 +15,25 @@ def deconstruct_equation(eqn):
     return ps
 
 
+def tokenize_ops(ps):
+    tops = [len(ps)] # first token is number of ops
+    for i in range(len(ps)):
+        if ps[i][0] == '-': op = 1
+        if ps[i][0] == '+': op = 2
+        if ps[i][0] == '*': op = 3
+        if ps[i][0] == '/': op = 4
+        if ps[i][0] == '^': op = 5
+        if ps[i][1] == None: o1 = -1 
+        else: o1 = ps[i][1]
+        if ps[i][2] == None: o2 = -1 
+        else: o2 = ps[i][2]
+        tops.append(op)
+        tops.append(o1)
+        tops.append(o2)
+    return tops
+
 def tokenize_eqn(ps):
-    tops = [1, 1, len(ps)] # set up the first 2 op class type and state_ix
+    tops = [-1, -1, len(ps)] # set up placeholders for the first 2 op class type and state_ix
     for i in range(len(ps)):
         if ps[i][0] == '-': op = 1
         if ps[i][0] == '+': op = 2
@@ -80,7 +97,12 @@ def init_op_tokens(op_tokens, tops, eq_ix):
 
     op_tokens[eq_ix] = np.asarray(tops, dtype="i8")
 
-
+def is_float_digit(n: str) -> bool:
+     try:
+         float(n)
+         return True
+     except ValueError:
+         return False
 
 @njit 
 def exec_op_tokens(op_tokens, state_ix, dict_ix, steps):
@@ -157,3 +179,15 @@ def init_sim_dicts():
     state_ix = Dict.empty(key_type=types.int64, value_type=types.float64)
     dict_ix = Dict.empty(key_type=types.int64, value_type=types.float32[:,:])
     return op_tokens, state_paths, state_ix, dict_ix
+
+def op_path_name(operation, id):
+    tid = str(id).zfill(3)
+    path_name = f'{operation}_{operation[0]}{tid}'
+    return path_name
+
+def specl_state_path(operation, id, activity):
+    op_name = op_path_name(operation, id) 
+    op_path = f'/STATE/{op_name}/{activity}'
+    return op_path
+
+# 
