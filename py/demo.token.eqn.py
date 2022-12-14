@@ -151,12 +151,14 @@ def exec_eqn_nall_m(op_token, state_ix):
     result = s[s_ix]
     return result 
 
+def init_sim_dicts():
+    op_tokens = Dict.empty(key_type=types.int64, value_type=types.i8[:])
+    state_paths = Dict.empty(key_type=types.unicode_type, value_type=types.int64)
+    state_ix = Dict.empty(key_type=types.int64, value_type=types.float64)
+    dict_ix = Dict.empty(key_type=types.int64, value_type=types.float32[:,:])
+    return op_tokens, state_paths, state_ix, dict_ix
 
-op_tokens = Dict.empty(key_type=types.int64, value_type=types.i8[:])
-state_paths = Dict.empty(key_type=types.unicode_type, value_type=types.int64)
-state_ix = Dict.empty(key_type=types.int64, value_type=types.float64)
-dict_ix = Dict.empty(key_type=types.int64, value_type=types.float32[:,:])
-
+op_tokens, state_paths, state_ix, dict_ix = init_sim_dicts()
     
 eqn = "(75.9 / (5 + 27.2)) * 16.3 + (100.4 / 7.3 - (134 + 23))^ 2.0"
 eqn_path = "/SPECL/RCHRES_0001/Tvar"
