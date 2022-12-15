@@ -1,6 +1,10 @@
 class dataMatrix(modelObject):
-    lu_type1 = ""
-    matrix = [] # gets passed in at creation.  Refers to path "/OBJECTS/DataMatrix/RCHRES_0001/stage_storage_discharge/matrix"
+    def __init__(self, name, state_ix, state_paths, dict_ix):
+        super(Equation, self).__init__(name, state_ix, state_paths, dict_ix)
+        self.lu_type1 = ""
+        self.matrix = [] # gets passed in at creation.  Refers to path "/OBJECTS/DataMatrix/RCHRES_0001/stage_storage_discharge/matrix"
+        self.optype = 2 # 0 - shell object, 1 - equation, 2 - datamatrix, 3 - input, 4 - broadcastChannel, 5 - ?
+    
     def ncode_step(self):
         # return string with code that is executable in @njit function with ts and object state variables
         code_lines = []
