@@ -23,6 +23,8 @@ def tokenize_ops(ps):
         if ps[i][0] == '*': op = 3
         if ps[i][0] == '/': op = 4
         if ps[i][0] == '^': op = 5
+        # a negative op code indicates null
+        # this should cause no confusion since all op codes are references and none are actual values
         if ps[i][1] == None: o1 = -1 
         else: o1 = ps[i][1]
         if ps[i][2] == None: o2 = -1 
@@ -52,6 +54,20 @@ def tokenize_eqn(ps):
 def tokenize_constants(tops, state_ix):
   # now stash the string vars as new state vars
   for j in range(len(tops)):
+      if is_float_digit(tops[j]):
+          # must add this to the state array as a constant
+          s_ix = append_state(state_ix, float(tops[j]))
+          tops[j] = s_ix
+      else:
+          # this is a variable, must find it's data path index
+          s_ix = append_state(state_ix, float(tops[j]))
+          tops[j] = s_ix
+
+
+
+def tokenize_variables(tops, state_ix):
+  # now stash the string vars as new state vars
+  for j in range(len(tops)):
       if isinstance(tops[j], str):
           # must add this to the state array as a constant
           s_ix = append_state(state_ix, float(tops[j]))
@@ -65,7 +81,7 @@ def find_state_path(state_paths, parent_path, varname):
 
 
 def get_state_ix(state_ix, state_paths, var_path):
-    if not (var_path in state_paths.keys()):
+    if not (var_path in list(state_paths.keys())):
         # we need to add this to the state 
         return False # should throw an error 
     var_ix = state_paths[var_path]
@@ -185,9 +201,12 @@ def op_path_name(operation, id):
     path_name = f'{operation}_{operation[0]}{tid}'
     return path_name
 
-def specl_state_path(operation, id, activity):
+def specl_state_path(operation, id, activity = ''):
     op_name = op_path_name(operation, id) 
-    op_path = f'/STATE/{op_name}/{activity}'
+    if activity == '':
+        op_path = f'/STATE/{op_name}'
+    else:
+        op_path = f'/STATE/{op_name}/{activity}'
     return op_path
 
 # 

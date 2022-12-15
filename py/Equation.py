@@ -14,24 +14,29 @@ class Equation(modelObject):
         self.ps = deconstruct_equation(self.equation)
     
     def tokenize_ops(self):
-        self.tops = [self.optype, self.ix] + tokenize_ops(self.ps)
+        self.deconstruct_eqn()
+        self.tops = tokenize_ops(self.ps)
     
-    def tokenize_constants(self, state_ix):
-        self.ps = deconstruct_equation(self.equation)
+    def tokenize_vars(self):
+      # now stash the string vars as new state vars
+      for j in range(2,len(self.tops)):
+          if isinstance(self.tops[j], int):
+              continue # already has been tokenized, so skip ahead
+          elif is_float_digit(self.tops[j]):
+              # must add this to the state array as a constant
+              constant_path = self.state_path + '/_ops/_op' + str(j) 
+              s_ix = set_state(self.state_ix, self.state_paths, constant_path, float(self.tops[j]) )
+              self.tops[j] = s_ix
+          else:
+              # this is a variable, must find it's data path index
+              var_path = self.find_var_path(self.tops[j])
+              s_ix = get_state_ix(self.state_ix, self.state_paths, var_path)
+              if s_ix == False:
+                  print("Error: unknown variable ", self.tops[j])
+                  return
+              else:
+                  self.tops[j] = s_ix
     
-    def tokenize_vars(self, state_ix):
-        self.tops = tokenize_constants(tops, state_ix)
-
-teq = Equation()
-teq.name = 'flowby'
-teq.equation = "Qin * 0.8"
-teq.tokenize_ops() 
-
-    def prepare_model():
-       self.set_paths();
-       exprStack = []
-       exprStack[:] = []
-       self.deconstruct_eqn();
-       self.tokenize_eqn();
-       self.tokenize_constants();
-       self.tokenize_vars();
+    def render_opcode(self):
+        op_code = [self.optype, self.ix] + self.tops
+        return op_code
