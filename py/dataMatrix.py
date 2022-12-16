@@ -1,21 +1,10 @@
 class dataMatrix(modelObject):
-    def __init__(self, name, state_ix, state_paths, dict_ix):
-        super(Equation, self).__init__(name, state_ix, state_paths, dict_ix)
+    def __init__(self, name, container = False, matrix_vals = []):
+        super(dataMatrix, self).__init__(name, container)
         self.lu_type1 = ""
-        self.matrix = [] # gets passed in at creation.  Refers to path "/OBJECTS/DataMatrix/RCHRES_0001/stage_storage_discharge/matrix"
+        self.matrix = matrix_vals # gets passed in at creation.  Refers to path "/OBJECTS/DataMatrix/RCHRES_0001/stage_storage_discharge/matrix"
+        # self.op_matrix = [] # this is the final opcoded matrix for  runtime
         self.optype = 2 # 0 - shell object, 1 - equation, 2 - datamatrix, 3 - input, 4 - broadcastChannel, 5 - ?
-    
-    def ncode_step(self):
-        # return string with code that is executable in @njit function with ts and object state variables
-        code_lines = []
-        if self.lu_type1 == "":
-            # this is only sample code of what a sample lookup might look like
-            # note: three consecutive quote marks (""") tell python that this is a multi-line string
-            code_lines.append("""OBJECTS_DATAMTRIX_0001 = array([[0.000000e+00, 1.700000e+02, 0.000000e+00],
-                [1.952000e+05, 2.400000e+02, 8.890600e+03],
-                [2.042528e+05, 2.410000e+02, 9.301500e+03],
-                [2.137360e+05, 2.420000e+02, 9.712500e+03]])""")
-            code_lines.append('ts["/RESULTS/RCHRES_001/SPECL/elev"][step] = np.interp(ts["/RESULTS/RCHRES_001/SPECL/Volume"][step],OBJECTS_DATAMATRIX_0001[:, 0][0:], OBJECTS_DATAMATRIX_0001[:, 1][0:])')
     
     def tokenize(self):
         # - insure we have a entity_ix pointing to state_ix
@@ -25,3 +14,39 @@ class dataMatrix(modelObject):
         # - store array in dict_ix keyed with entity_ix
         # - get entity_ix for lookup key(s)
         # - create tokenized array with entity_ix, lookup types, 
+        # renders tokens for high speed execution
+        self.ops = [self.optype, self.ix]
+    
+    def add_op_tokens(self):
+        # this puts the tokens into the global simulation queue 
+        # can be customized by subclasses to add multiple lines if needed.
+        self.op_tokens[self.ix] = self.ops
+        self.dict_ix[self.ix] = self.op_matrix
+
+# njit functions for runtime
+
+@njit
+def specl_lookup(data_table, keyval, lutype, valcol):
+    if lutype == 2: #stair-step
+        idx = (data_table[:, 0][0:][(data_table[:, 0][0:]- keyval) <= 0]).argmax()
+        luval = data_table[:, valcol][0:][idx]
+    elif lutype == 1: # interpolate
+        luval = np.interp(keyval,data_table[:, 0][0:], data_table[:, valcol][0:])
+        
+    # show value at tis point
+    return luval
+
+@njit
+def exec_tbl_eval(op, state_ix, dict_ix):
+    ix = op[1]
+    dix = op[2]
+    mx_type = op[3] # not used yet, what type of table?  in past this was always 1-d or 2-d 
+    key1_ix = op[4]
+    #print("ix, dict_ix, mx_type, key1_ix", ix, dix, mx_type, key1_ix)
+    lutype = op[5]
+    valcol = op[8]
+    data_table = dict_ix[dix]
+    keyval = state_ix[key1_ix]
+    #print("Key, ltype, val", keyval, lutype, valcol)
+    result = specl_lookup(data_table, keyval, lutype, valcol)
+    return result
