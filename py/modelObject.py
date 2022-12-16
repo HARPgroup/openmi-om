@@ -2,13 +2,11 @@ class modelObject:
     state_ix = {} # Shared Dict with the numerical state of each object 
     state_paths = {} # Shared Dict with the hdf5 path of each object 
     dict_ix = {} # Shared Dict with the hdf5 path of each object 
+    op_tokens = {} # Shared Dict with the tokenized representation of each object 
     
-    def __init__(self, name, state_ix, state_paths, dict_ix):
+    def __init__(self, name, container = False):
         self.name = name
-        self.state_ix = state_ix
-        self.state_paths = state_paths
-        self.dict_ix = dict_ix
-        self.container = False # will be a link to another object
+        self.container = container # will be a link to another object
         self.log_path = "" # Ex: "/RESULTS/RCHRES_001/SPECL" 
         self.attribute_path = "/OBJECTS/RCHRES_001" # 
         self.state_path = "" # Ex: "/STATE/RCHRES_001" # the pointer to this object state
@@ -17,6 +15,12 @@ class modelObject:
         self.default_value = 0.0
         self.ops = []
         self.optype = 0 # 0 - shell object, 1 - equation, 2 - datamatrix, 3 - input, 4 - broadcastChannel, 5 - ?
+    
+    def load_state_dicts(op_tokens, state_paths, state_ix, dict_ix):
+        self.op_tokens = op_tokens
+        self.state_paths = state_paths
+        self.state_ix = state_ix
+        self.dict_ix = dict_ix
     
     def make_state_path(self):
         if not (self.container == False):
@@ -33,6 +37,9 @@ class modelObject:
         return False
     
     def register_path(self):
+        # initialize the path variable if not already set
+        if self.state_path == '':
+            self.make_state_path()
         self.ix = set_state(self.state_ix, self.state_paths, self.state_path, self.default_value)
         # this should check to see if this object has a parent, and if so, register the name on the parent 
         # as an input?
@@ -57,10 +64,15 @@ class modelObject:
     def get_state(self):
         return self.state_ix[self.ix]
     
-    def render_opcode(self):
-        op_code = [self.optype, self.ix] + self.ops
-        return op_code
+    def tokenize(self):
+        # renders tokens for high speed execution
+        self.ops = [self.optype, self.ix]
     
-    def __del__(self):
-        print("modelObject is gone")
+    def add_op_tokens(self):
+        # this puts the tokens into the global simulation queue 
+        # can be customized by subclasses to add multiple lines if needed.
+        if self.ops == []:
+            self.tokenize()
+        self.op_tokens[self.ix] = np.asarray(self.ops, dtype="i8")
+
 

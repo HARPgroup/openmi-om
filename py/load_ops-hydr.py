@@ -17,11 +17,23 @@ for i in hydr_state:
     hydr_ix[i] = set_state(state_ix, state_paths, var_path, 0.0)
 
 
+
 # *****************************
 # At the beginning of each step do this:
 # before calling specl()
-state[hydr_ix['O1']] = outdgt[0]
-state[hydr_ix['O2']] = outdgt[1]
-state[hydr_ix['O3']] = outdgt[2]
+# Can we rewrite:
+#   state[hydr_ix['O1']] = outdgt[0]
+#   state[hydr_ix['O2']] = outdgt[1]
+#   state[hydr_ix['O3']] = outdgt[2]
+# as:
+# state[hydr_ix['O1']], state[hydr_ix['O2']], state[hydr_ix['O3']] = outdgt[0], outdgt[1], outdgt[2]
+# contrast performance of this:
+state[hydr_ix['O1']], state[hydr_ix['O2']], state[hydr_ix['O3']] = outdgt[0], outdgt[1], outdgt[2]
+#with this:
+o1_ix, o2_ix, o3_ix = hydr_ix['O1'], hydr_ix['O2'], hydr_ix['O3']
+state[o1_ix], state[o2_ix], state[o3_ix] = outdgt[0], outdgt[1], outdgt[2]
+
 # after returning from specl()
 outdgt[:] = [state[hydr_ix['O1']], state[hydr_ix['O2']], state[hydr_ix['O3']] ]
+
+outdgt[:] = [ state[o1_ix], state[o2_ix], state[o3_ix] ]

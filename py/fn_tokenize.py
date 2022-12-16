@@ -193,8 +193,9 @@ def init_sim_dicts():
     op_tokens = Dict.empty(key_type=types.int64, value_type=types.i8[:])
     state_paths = Dict.empty(key_type=types.unicode_type, value_type=types.int64)
     state_ix = Dict.empty(key_type=types.int64, value_type=types.float64)
-    dict_ix = Dict.empty(key_type=types.int64, value_type=types.float32[:,:])
-    return op_tokens, state_paths, state_ix, dict_ix
+    dict_ix = Dict.empty(key_type=types.int64, value_type=types.float64[:,:])
+    ts_ix = Dict.empty(key_type=types.int64, value_type=types.float64[:])
+    return op_tokens, state_paths, state_ix, dict_ix, ts_ix
 
 def op_path_name(operation, id):
     tid = str(id).zfill(3)
