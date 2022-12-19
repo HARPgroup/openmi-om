@@ -1,3 +1,10 @@
+"""
+The class Equation is used to translate an equation in text string form into a tokenized model op code
+The equation will look for variable names inside the equation string (i.e. not numeric, not math operator)
+and will then search the local object inputs and the containing object inputs (if object has parent) for 
+the variable name in question.  Ultimately, everyting becomes either an operator or a reference to a variable
+in the state_ix Dict for runtime execution.
+"""
 class Equation(modelObject):
     # the following are supplied by the parent class: name, log_path, attribute_path, state_path, inputs
     
