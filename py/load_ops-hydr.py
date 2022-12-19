@@ -65,6 +65,7 @@ steps = 40 * 365 * 24
 
 
 # add to hydr() (not _hydr_())
+op_tokens, state_paths, state_ix, dict_ix, ts_ix = init_sim_dicts()
 hydr_ix = hydr_get_ix(state_ix, state_paths, domain)
 
 
