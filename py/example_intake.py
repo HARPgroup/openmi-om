@@ -23,9 +23,19 @@ flowby = Equation('flowby', facility, "Qintake * 0.9")
 flowby.register_path()
 flowby.tokenize()
 
-wd_mgd = Equation('demand_mgd', facility, "3.0 + 0.0")
+wd_mgd = Equation('wd_mgd', facility, "3.0 + 0.0")
 wd_mgd.register_path()
 wd_mgd.tokenize() 
+
+import random
+# add a series of rando equations 
+c=["flowby", "wd_mgd", "Qintake"]
+for k in range(100):
+    eqn = str(25*random.random()) + " * " + c[round((2*random.random()))]
+    newq = Equation('eq' + str(k), facility, eqn)
+    newq.register_path()
+    newq.tokenize()
+    newq.add_op_tokens()
 
 # now connect the wd_mgd back to the river with a direct link.  
 # This is not how we'll do it for most simulations as there may be multiple inputs but will do for now
@@ -43,24 +53,13 @@ flowby.add_op_tokens()
 wd_mgd.add_op_tokens()
 O1.add_op_tokens()
 
-step(op_tokens, state_ix, dict_ix, ts_ix, 1)
+step_model(op_tokens, state_ix, dict_ix, ts_ix, 1)
 
 steps=40*365*24
 start = time.time()
 num = iterate_models(op_tokens, state_ix, dict_ix, ts_ix, steps)
 end = time.time()
 print(end - start, "seconds")
-
-
-# get a list of keys for all hydr state variables
-hydr_state = ["DEP","IVOL","O1","O2","O3","OVOL1","OVOL2","OVOL3","PRSUPY","RO","ROVOL","SAREA","TAU","USTAR","VOL","VOLEV"]
-hydr_ix = Dict.empty(key_type=types.unicode_type, value_type=types.int64)
-for i in hydr_state:
-    var_path = f'{domain}/{i}'
-    hydr_ix[i] = set_state(state_ix, state_paths, var_path, 0.0)
-
-o1_ix, o2_ix, o3_ix = hydr_ix['O1'], hydr_ix['O2'], hydr_ix['O3']
-outdgt[:] = [ state_ix[o1_ix], state_ix[o2_ix], state_ix[o3_ix] ]
 
 
 

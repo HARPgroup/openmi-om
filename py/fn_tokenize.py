@@ -1,3 +1,5 @@
+''' General functions for tokenizing models '''
+
 import numpy as np
 import time
 from numba.typed import Dict
@@ -13,7 +15,6 @@ def deconstruct_equation(eqn):
     ep = exprStack
     pre_evaluate_stack(ep[:], ps)
     return ps
-
 
 def tokenize_ops(ps):
     tops = [len(ps)] # first token is number of ops
@@ -34,45 +35,6 @@ def tokenize_ops(ps):
         tops.append(o2)
     return tops
 
-def tokenize_eqn(ps):
-    tops = [-1, -1, len(ps)] # set up placeholders for the first 2 op class type and state_ix
-    for i in range(len(ps)):
-        if ps[i][0] == '-': op = 1
-        if ps[i][0] == '+': op = 2
-        if ps[i][0] == '*': op = 3
-        if ps[i][0] == '/': op = 4
-        if ps[i][0] == '^': op = 5
-        if ps[i][1] == None: o1 = -1 
-        else: o1 = ps[i][1]
-        if ps[i][2] == None: o2 = -1 
-        else: o2 = ps[i][2]
-        tops.append(op)
-        tops.append(o1)
-        tops.append(o2)
-    return tops
-
-def tokenize_constants(tops, state_ix):
-  # now stash the string vars as new state vars
-  for j in range(len(tops)):
-      if is_float_digit(tops[j]):
-          # must add this to the state array as a constant
-          s_ix = append_state(state_ix, float(tops[j]))
-          tops[j] = s_ix
-      else:
-          # this is a variable, must find it's data path index
-          s_ix = append_state(state_ix, float(tops[j]))
-          tops[j] = s_ix
-
-
-
-def tokenize_variables(tops, state_ix):
-  # now stash the string vars as new state vars
-  for j in range(len(tops)):
-      if isinstance(tops[j], str):
-          # must add this to the state array as a constant
-          s_ix = append_state(state_ix, float(tops[j]))
-          tops[j] = s_ix
-
 
 def find_state_path(state_paths, parent_path, varname):
     # this is a bandaid, we should have an object routine that searches the parent for variables or inputs
@@ -86,7 +48,6 @@ def get_state_ix(state_ix, state_paths, var_path):
         return False # should throw an error 
     var_ix = state_paths[var_path]
     return var_ix
-
 
 def set_state(state_ix, state_paths, var_path, default_value = 0.0):
     if not (var_path in state_paths.keys()):
@@ -110,7 +71,7 @@ def init_op_tokens(op_tokens, tops, eq_ix):
             # must add this to the state array as a constant
             s_ix = append_state(state_ix, float(tops[j]))
             tops[j] = s_ix
-
+            
     op_tokens[eq_ix] = np.asarray(tops, dtype="i8")
 
 def is_float_digit(n: str) -> bool:
