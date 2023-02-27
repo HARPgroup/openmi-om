@@ -1,10 +1,13 @@
-class dataMatrix(modelObject):
+"""
+The class DataMatrix is used to translate provide table lookup and interpolation function.
+"""
+class DataMatrix(modelObject):
     def __init__(self, name, container = False, matrix_vals = []):
-        super(dataMatrix, self).__init__(name, container)
+        super(DataMatrix, self).__init__(name, container)
         self.lu_type1 = ""
         self.matrix = matrix_vals # gets passed in at creation.  Refers to path "/OBJECTS/DataMatrix/RCHRES_0001/stage_storage_discharge/matrix"
         # self.op_matrix = [] # this is the final opcoded matrix for  runtime
-        self.optype = 2 # 0 - shell object, 1 - equation, 2 - datamatrix, 3 - input, 4 - broadcastChannel, 5 - ?
+        self.optype = 2 # 0 - shell object, 1 - equation, 2 - DataMatrix, 3 - input, 4 - broadcastChannel, 5 - ?
     
     def tokenize(self):
         # - insure we have a entity_ix pointing to state_ix
