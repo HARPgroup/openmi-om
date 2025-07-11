@@ -38,7 +38,8 @@ obj_json <- load_objects["0. Lake Anna: Dominion Power"][[1]]
 # by calling node/62/single_json
 # obj_json <- load_objects[names(load_objects)[1]]
 #obj <- openmi_om_load_single(obj_json)
-obj <- openmi_om_load(obj_json)
+#obj <- openmi_om_load(obj_json)
+obj <- openmi_om_load(load_objects)
 
 # finally add this to a simulation engine
 m$addComponent(obj)
