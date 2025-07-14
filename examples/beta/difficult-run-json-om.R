@@ -1,15 +1,14 @@
-# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9105.tar.gz', repos = NULL, type="source")
+# install.packages('https://github.com/HARPgroup/openmi-om/raw/master/R/openmi.om_0.0.0.9106.tar.gz', repos = NULL, type="source")
+library(openmi.om)
+library(xts)
+library(lubridate)
+library(rjson)
+library(hydrotools)
 
-library("openmi.om")
-library("xts")
-library("IHA")
-library("lubridate")
-library("rjson")
-library("hydrotools")
+basepath='/var/www/R'
+source(paste(basepath,'config.R',sep='/'))
 
-# Create datasource
-ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
-ds$get_token()
+
 #****************************
 # Import JSON Objects
 #****************************
@@ -25,11 +24,13 @@ load_objects <- fromJSON(file = src_json)
 # Set up run timer
 #****************************
 #
-m <- openmi.om.runtimeController$new();
+m <- openmi.om.runtimeController$new()
 m$timer$starttime = as.POSIXct('1997-10-01')
 m$timer$endtime = as.POSIXct('1997-10-31')
 m$timer$thistime = m$timer$starttime
 m$timer$dt <- 86400
+
+m$init()
 
 # since the root object is returned embedded in the json we need to extract it
 obj_json <- load_objects["0. Lake Anna: Dominion Power"][[1]]
@@ -39,10 +40,17 @@ obj_json <- load_objects["0. Lake Anna: Dominion Power"][[1]]
 # obj_json <- load_objects[names(load_objects)[1]]
 #obj <- openmi_om_load_single(obj_json)
 #obj <- openmi_om_load(obj_json)
+
+# parentObj <- openmi_om_load_single(load_objects)
+
 obj <- openmi_om_load(load_objects)
+
+#Run all init functions on components to set inputs, vars, data, etc
+# obj$init()
 
 # finally add this to a simulation engine
 m$addComponent(obj)
+
 # add a counter of month
 mo_plus_one <- openmi.om.equation$new();
 mo_plus_one$equation = "mo + 1";
