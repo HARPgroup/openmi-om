@@ -83,16 +83,18 @@ openmi.om.matrix <- R6Class(
     #' @param ixval key to search for
     #' @param ixtype what kind of lookup to perform?
     #' @return matching value (with interpolation if ixtype allows it)
-    findMatch = function (dm, ixval, ixtype = 0) {
-      foundmatch = switch(
-        ixtype,
-        '0' = self$exactMatch(dm, ixval),
-        '1' = self$interpolate(dm, ixval),
-        '2' = self$stairStep(dm, ixval),
-        '3' = self$closest(dm, ixval),
-        # default
-        self$exactMatch(dm, ixval)
-      )
+    findMatch = function (dm, dkeys, ixval, ixtype = 0) {
+      if (ixtype == 0) {
+        foundmatch = self$exactMatch(dm, dkeys, ixval)
+      } else if (ixtype == 1) {
+        foundmatch = self$interpolate(dm, dkeys, ixval)
+      } else if (ixtype == 2) {
+        foundmatch = self$stairStep(dm, dkeys, ixval)
+      } else if (ixtype == 3) {
+        foundmatch = self$window(dm, dkeys, ixval)
+      } else {
+        foundmatch = self$exactMatch(dm, dkeys, ixval)
+      }
       return(foundmatch)
     },
     #' @description exactMatch looks for keys
@@ -100,12 +102,12 @@ openmi.om.matrix <- R6Class(
     #' @param ixval key to search for
     #' @param rectype what kind of array is dm?
     #' @return matching value
-    exactMatch = function(dm, ixval, rectype = 'row') {
+    exactMatch = function(dm, dkeys, ixval, rectype = 'row') {
       # match row & col exactly
       if (is.null(ncol(dm))) {
-        rval = dm[ixval]
+        rval = dm[dkeys == ixval]
       } else {
-        rval = dm[ixval,]
+        rval = dm[dkeys == ixval,]
       }
       return(rval)
     },
@@ -113,21 +115,41 @@ openmi.om.matrix <- R6Class(
     #' @param dm array to search
     #' @param ixval key to search for
     #' @return interpolated value
-    interpolate = function(dm, ixval) {
+    interpolate = function(dm, dkeys, ixval) {
       # @todo: make this work
       #        for now, return exact match
       if (is.null(ncol(dm))) {
-        rval = dm[ixval]
+        lte <- dm[dkeys <= ixval]
+        lv = lte[length(lte)]
+        li = dkeys[length(lte)]
+        gv <- dm[dkeys >= ixval][1]
+        gi = dkeys[dkeys >= ixval][1]
+        if (li == gi) {
+          # exact match
+          return(lv)
+        }
+        idist = ((ixval - li) / (gi - li) )
+        iv = lv + idist * (gv - lv)
       } else {
-        rval = dm[ixval,]
+        lte <- dm[dkeys <= ixval,]
+        lv = lte[nrow(lte),]
+        li = dkeys[nrow(lte)]
+        gv <- dm[dkeys >= ixval,][1,]
+        gi = dkeys[dkeys >= ixval][1]
+        if (li == gi) {
+          # exact match
+          return(lv)
+        }
+        idist = ((ixval - li) / (gi - li) )
+        iv = lv + idist * (gv - lv)
       }
-      return(rval)
+      return(iv)
     },
     #' @description stairStep searches by key and select closest previous
     #' @param dm array to search
     #' @param ixval key to search for
     #' @return closest value
-    stairStep = function(dm, ixval) {
+    stairStep = function(dm, dkeys, ixval) {
       # match nearest val that is less than or equal to ixval
       if (is.null(ncol(dm))) {
         # given only a 1-column entity
@@ -149,7 +171,7 @@ openmi.om.matrix <- R6Class(
     #' @param ixval key to search for
     #' @param ixoff index offset
     #' @return calculated value
-    window = function(dm, ixval, ixoff) {
+    window = function(dm, dkeys, ixval, ixoff) {
       # get values prior to and after ixval, use ixoff to help guess
       if (is.null(ncol(dm))) {
         # given only a 1-column entity
@@ -176,7 +198,7 @@ openmi.om.matrix <- R6Class(
     #' @param dm array to search
     #' @param ixval key to search for
     #' @return closest value
-    closest = function(dm, ixval) {
+    closest = function(dm, dkeys, ixval) {
       # match row & col exactly
       if (is.null(ncol(dm))) {
         # given only a 1-column entity

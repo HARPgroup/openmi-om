@@ -8,8 +8,8 @@ library("rjson")
 library("hydrotools")
 
 # Create datasource
-ds <- RomDataSource$new("https://deq1.bse.vt.edu/d.dh", 'restws_admin')
-ds$get_token()
+basepath="/var/www/R"
+source("/var/www/R/config.R")
 #****************************
 # Import JSON Objects
 #****************************
