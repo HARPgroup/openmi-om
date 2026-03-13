@@ -13,12 +13,12 @@ m$timer$dt <- 15 * 86400
 #****************************
 # Add Basic Equations
 #****************************
-k <- openmi.om.equation();
+k <- openmi.om.equation$new();
 k$defaultvalue = 0
 k$equation = "value + 0.1"; # just add one to previous value
-m$addComponent(k) 
+m$addComponent(k)
 # Matrix
-j <- openmi.om.matrix()
+j <- openmi.om.matrix$new()
 mm <- as.matrix(
   rbind(
     c(1, 1.0),
@@ -36,11 +36,11 @@ j$colindex = 'val'
 # current month
 mo <- openmi.om.equation();
 mo$equation = "mo";
-m$addComponent(mo) 
-j$addInput('rowindex', mo, 'value') 
+m$addComponent(mo)
+j$addInput('rowindex', mo, 'value')
 
 
-m$addComponent(j) 
+m$addComponent(j)
 
 #****************************
 # Call initialize for model and all children
