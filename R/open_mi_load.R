@@ -5,13 +5,18 @@
 #' @seealso NA
 #' @export openmi_om_load
 #' @examples NA
-openmi_om_load <- function (elem_list) {
+openmi_om_load <- function (elem_list, timer = FALSE) {
   # all others that may be embedded inside it are ancillary
   # this will instantiate an object if it exists, pass the other 1st level
   # data into the object initialize() function which will handle any other attributes
   elem_obj <- openmi_om_load_single(elem_list)
   c <- 0
   if (!is.logical(elem_obj)) {
+    #If timer is not set, set to the object passed in by user
+    if(is.na(elem_obj$timer) && !is.logical(timer)){
+      elem_obj$timer <- timer
+    }
+
     for (j in names(elem_list)) {
       if (!is.na(match(j, c('object_class', 'name', 'value')))) {
         # these are special reserved words, so just skip
@@ -20,6 +25,7 @@ openmi_om_load <- function (elem_list) {
         next
       }
       j_list = elem_list[[j]]
+      message(j)
       if (!is.na(match('object_class', names(j_list)))) {
         sub_obj <- openmi_om_load(j_list)
         # here we check to see if an object is returned.  If so, this is a legit
@@ -27,7 +33,6 @@ openmi_om_load <- function (elem_list) {
         # by the initial object creation, so we just discard
         if (as.character(typeof(sub_obj)) == 'environment') {
           message(paste("Adding component", sub_obj$name))
-
           elem_obj$add_component(sub_obj)
         }
       }
