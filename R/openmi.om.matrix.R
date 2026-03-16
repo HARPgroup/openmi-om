@@ -80,6 +80,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description findMatch looks into a single dimension table
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @param ixtype what kind of lookup to perform?
     #' @return matching value (with interpolation if ixtype allows it)
@@ -99,6 +100,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description exactMatch looks for keys
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @param rectype what kind of array is dm?
     #' @return matching value
@@ -113,6 +115,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description interpolate searches by key and calculates if no exact match
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @return interpolated value
     interpolate = function(dm, dkeys, ixval) {
@@ -147,6 +150,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description stairStep searches by key and select closest previous
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @return closest value
     stairStep = function(dm, dkeys, ixval) {
@@ -168,6 +172,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description window does what???
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @param ixoff index offset
     #' @return calculated value
@@ -196,6 +201,7 @@ openmi.om.matrix <- R6Class(
     },
     #' @description closest select closest value
     #' @param dm array to search
+    #' @param dkeys keys to use for array to search
     #' @param ixval key to search for
     #' @return closest value
     closest = function(dm, dkeys, ixval) {
