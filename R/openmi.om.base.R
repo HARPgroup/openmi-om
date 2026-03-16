@@ -36,7 +36,7 @@ openmi.om.base <- R6Class(
     #' @field vars is an array of variables that this requires for solving, determines op order
     vars = NA,
     #' @field timer is the object keepign time in simulation (set by parent controller)
-    timer = openmi.om.timer,
+    timer = NA,
     #' @field id is identifier (compid, name duplicates?)
     id = NA,
     #' @param elem_list which properties to set on creation
@@ -210,7 +210,7 @@ openmi.om.base <- R6Class(
     #' @return NULL
     stepChildren = function(){
       # evaluate() in OM php
-      if (!is.na(self$components)) {
+      if (is.list(self$components)) {
         for (i in 1:length(self$components)) {
           #message(paste("Calling update() on ", i))
           self$components[[i]]$step()
@@ -228,7 +228,7 @@ openmi.om.base <- R6Class(
     #' @return NULL
     finish = function(){
       # postStep() in OM php
-      if (!is.na(self$components)) {
+      if (is.list(self$components)) {
         if (length(self$components) > 0) {
           for (i in 1:length(self$components)) {
             self$components[[i]]$finish()
@@ -308,7 +308,7 @@ openmi.om.base <- R6Class(
       message(paste("Created compid =", compid))
       thiscomp$compid <- compid
       thiscomp$timer = self$timer
-      if (is.na(self$components)) {
+      if (!is.list(self$components)) {
         self$components = list()
       }
       self$components[compid] <- list('object' = thiscomp)
@@ -340,7 +340,7 @@ openmi.om.base <- R6Class(
         thiscomp$type = 'unknown'
       }
       if (length(thiscomp$id) == 0) {
-        if (is.na(self$components)) {
+        if (!is.list(self$components)) {
           cid = 1
         } else {
           cid = length(self$components) + 1
