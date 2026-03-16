@@ -4,6 +4,5 @@ tempfile
 *.Rhistory
 *.out
 *.docx
-.Rdata
 .Rhistory
 .Rproj.user
