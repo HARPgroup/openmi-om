@@ -135,8 +135,8 @@ openmi.om.matrix <- R6Class(
         iv = lv + idist * (gv - lv)
       } else {
         lte <- dm[dkeys <= ixval,]
-        lv = lte[nrow(lte),]
-        li = dkeys[nrow(lte)]
+        lv = lte[NROW(lte),]
+        li = dkeys[NROW(lte)]
         gv <- dm[dkeys >= ixval,][1,]
         gi = dkeys[dkeys >= ixval][1]
         if (li == gi) {
